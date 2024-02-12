@@ -3,4 +3,4 @@ document.querySelector(".contenido").innerHTML = `${nombre} está aprendiendo JS
 
 // comentario
 
-console.error("Algo salió mal")
+console.error("Algo salió mal");
