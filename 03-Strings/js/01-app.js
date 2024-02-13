@@ -1,3 +1,3 @@
 const nombre = "Carlos"
 const apellido = String("Calderon")
-const edad = new String(20)
+let edad = new String(20)
