@@ -1,0 +1,3 @@
+let producto;
+producto = 'producto';
+
