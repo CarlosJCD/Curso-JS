@@ -49,6 +49,11 @@ listaCarrito.addEventListener("click",event =>{
     }
 })
 
+botonVaciarCarrito.addEventListener("click", event =>{
+    carritoDeCompras = [];
+    actualizarCarritoEnHTML();
+})
+
 function actualizarCarritoEnHTML() {
     limpiarContenedorCarritoEnHTML();
 
