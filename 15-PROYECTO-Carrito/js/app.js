@@ -15,7 +15,7 @@ listaCursos.addEventListener("click", event => {
         const cardCurso =  event.target.parentElement.parentElement;
 
 
-        const curso = {
+        const cursoSeleccionado = {
             id: cardCurso.querySelector("a").getAttribute("data-id"),
             titulo: cardCurso.querySelector(".info-card h4").textContent,
             precio: cardCurso.querySelector(".info-card p.precio span").textContent,
@@ -23,7 +23,7 @@ listaCursos.addEventListener("click", event => {
             cantidad: 1
         }
 
-        añadirCurso(curso);
+        añadirCurso(cursoSeleccionado);
     }
 
     function añadirCurso(curso) {
@@ -36,6 +36,16 @@ listaCursos.addEventListener("click", event => {
 
         actualizarCarritoEnHTML();
 
+    }
+})
+
+listaCarrito.addEventListener("click",event =>{
+    if(event.target.classList.contains("borrar-curso")){
+        const idCursoAEliminar = event.target.getAttribute("data-id");
+
+        carritoDeCompras = carritoDeCompras.filter(curso => curso.id !== idCursoAEliminar);
+
+        actualizarCarritoEnHTML()
     }
 })
 
