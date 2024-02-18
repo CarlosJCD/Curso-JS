@@ -45,17 +45,21 @@ function actualizarCarritoEnHTML() {
 
     carritoDeCompras.forEach(curso => {
         
+        const {srcImagen, titulo, precio, cantidad, id} = curso;
+
         const contenedorCurso = document.createElement("tr");
 
-        const imagenCurso = `<td><img src="${curso.srcImagen}"></td>`
-        const tituloCurso = `<td>${curso.titulo} </td>`
-        const precioCurso = `<td>${curso.precio} </td>`
-        const cantidadCurso = `<td>${curso.cantidad} </td>`
-        
+        const imagenCurso = `<td><img src="${srcImagen}" width='100'></td>`
+        const tituloCurso = `<td>${titulo} </td>`
+        const precioCurso = `<td>${precio} </td>`
+        const cantidadCurso = `<td>${cantidad} </td>`
+        const botonBorrarCurso = `<td> <a href='#' class='borrar-curso' data-id='${id}'> X </a></td>`
+
         contenedorCurso.innerHTML += imagenCurso;
         contenedorCurso.innerHTML += tituloCurso;
         contenedorCurso.innerHTML += precioCurso;
         contenedorCurso.innerHTML += cantidadCurso;
+        contenedorCurso.innerHTML += botonBorrarCurso;
 
         contenedorCarrito.appendChild(contenedorCurso);
     });
