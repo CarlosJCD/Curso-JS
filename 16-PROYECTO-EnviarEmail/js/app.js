@@ -1,10 +1,14 @@
  
+ const formulario = document.querySelector("#formulario");
+
  const inputEmail = document.querySelector("#email");
  const inputAsunto = document.querySelector("#asunto");
  const inputMensaje = document.querySelector("#mensaje");
 
  const botónEnviarFormulario = document.querySelectorAll("button")[0];
  const botónResetFormulario = document.querySelectorAll("button")[1];
+
+ const spinner = document.querySelector("#spinner");
 
  const CLASES_CSS_ALERTA_ERROR = "bg-red-600 text-white p-2 text-center";
  const CLASE_CSS_BOTÓN_DESACTIVADO = "opacity-50";
@@ -15,7 +19,7 @@
 
  const INPUT_EMAIL_ID = "email";
 
- const correoAEnviar = {
+ let correoAEnviar = {
     email: "",
     asunto: "",
     mensaje: ""
@@ -35,6 +39,29 @@ inputMensaje.addEventListener("blur", event => {
     validarInput(event.target);
     actualizarEstadoBotónEnviar();
 })
+
+botónResetFormulario.addEventListener("click", () => {
+    reiniciarFormulario();
+})
+
+formulario.addEventListener("submit", event => {
+    event.preventDefault();
+
+    spinner.classList.add("flex");
+    spinner.classList.remove("hidden");
+    
+    setTimeout(() => {
+        spinner.classList.add("hidden");
+        spinner.classList.remove("flex");
+        reiniciarFormulario();
+    }, 3000);
+
+})
+
+function reiniciarFormulario() {
+    formulario.reset();
+    reiniciarCorreoAEnviar();
+}
 
 function validarInput(input) {   
     
@@ -78,7 +105,6 @@ function desplegarAlertaError(nodoHTML, mensajeError) {
 }
 
 function actualizarEstadoBotónEnviar() {
-    console.log(hayErrores());
 
     if(hayErrores()){
         desactivarBotónEnviarFormulario();
@@ -99,4 +125,12 @@ function desactivarBotónEnviarFormulario() {
 function activarBotónEnviarFormulario() {
     botónEnviarFormulario.disabled = false;
     botónEnviarFormulario.classList.remove(CLASE_CSS_BOTÓN_DESACTIVADO);
+}
+
+function reiniciarCorreoAEnviar() {
+    correoAEnviar = {
+        email: "",
+        asunto: "",
+        mensaje: ""
+    }
 }
