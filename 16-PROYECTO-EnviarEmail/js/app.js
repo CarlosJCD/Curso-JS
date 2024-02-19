@@ -7,6 +7,7 @@
  const botónResetFormulario = document.querySelectorAll("button")[1];
 
  const CLASES_CSS_ALERTA_ERROR = "bg-red-600 text-white p-2 text-center";
+ const CLASE_CSS_BOTÓN_DESACTIVADO = "opacity-50";
 
  const SELECTOR_CSS_ALERTA_ERROR = "p#error";
 
@@ -22,14 +23,17 @@
 
 inputEmail.addEventListener("blur", event => {
     validarInput(event.target);
+    actualizarEstadoBotónEnviar();
 })
 
 inputAsunto.addEventListener("blur", event => {
     validarInput(event.target);
+    actualizarEstadoBotónEnviar();
 })
 
 inputMensaje.addEventListener("blur", event => {
     validarInput(event.target);
+    actualizarEstadoBotónEnviar();
 })
 
 function validarInput(input) {   
@@ -45,6 +49,7 @@ function validarInput(input) {
         if(alertaError) alertaError.remove();
     }
 
+    correoAEnviar[input.id] = input.value;
 }
 
 function validarEmail(email) {
@@ -70,4 +75,28 @@ function desplegarAlertaError(nodoHTML, mensajeError) {
         nodoHTML.appendChild(alertaError);
     }
 
+}
+
+function actualizarEstadoBotónEnviar() {
+    console.log(hayErrores());
+
+    if(hayErrores()){
+        desactivarBotónEnviarFormulario();
+    } else {
+        activarBotónEnviarFormulario();
+    }
+}
+
+function hayErrores() {
+    return document.querySelectorAll(SELECTOR_CSS_ALERTA_ERROR).length !== 0;
+}
+
+function desactivarBotónEnviarFormulario() {
+    botónEnviarFormulario.disabled = true;
+    botónEnviarFormulario.classList.add(CLASE_CSS_BOTÓN_DESACTIVADO);
+}
+
+function activarBotónEnviarFormulario() {
+    botónEnviarFormulario.disabled = false;
+    botónEnviarFormulario.classList.remove(CLASE_CSS_BOTÓN_DESACTIVADO);
 }
