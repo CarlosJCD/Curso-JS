@@ -1,31 +1,42 @@
  
- const formulario = document.querySelector("#formulario");
+const formulario = document.querySelector("#formulario");
 
- const inputEmail = document.querySelector("#email");
- const inputAsunto = document.querySelector("#asunto");
- const inputMensaje = document.querySelector("#mensaje");
+const inputEmail = document.querySelector("#email");
+const inputCC = document.querySelector("#cc");
+const inputAsunto = document.querySelector("#asunto");
+const inputMensaje = document.querySelector("#mensaje");
 
- const botónEnviarFormulario = document.querySelectorAll("button")[0];
- const botónResetFormulario = document.querySelectorAll("button")[1];
+const botónEnviarFormulario = document.querySelectorAll("button")[0];
+const botónResetFormulario = document.querySelectorAll("button")[1];
 
- const spinner = document.querySelector("#spinner");
+const IDS_INPUTS_EMAIL = ["email", "cc"]
 
- const CLASES_CSS_ALERTA_ERROR = "bg-red-600 text-white p-2 text-center";
- const CLASE_CSS_BOTÓN_DESACTIVADO = "opacity-50";
+const spinner = document.querySelector("#spinner");
 
- const SELECTOR_CSS_ALERTA_ERROR = "p#error";
+const CLASES_CSS_ALERTA_ERROR = "bg-red-600 text-white p-2 text-center";
+const CLASES_CSS_ALERTA_ÉXITO = "bg-green-500 text-white p-2 text-center rounded-lg mt-10 font-bold text-sm uppercase";
 
- const REGEX_EMAIL = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+const CLASE_CSS_BOTÓN_DESACTIVADO = "opacity-50";
 
- const INPUT_EMAIL_ID = "email";
+const SELECTOR_CSS_ALERTA_ERROR = "p#error";
 
- let correoAEnviar = {
+const REGEX_EMAIL = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+
+const INPUT_EMAIL_ID = "email";
+
+let correoAEnviar = {
     email: "",
     asunto: "",
-    mensaje: ""
+    mensaje: "",
+    cc: ""
  }
 
 inputEmail.addEventListener("blur", event => {
+    validarInput(event.target);
+    actualizarEstadoBotónEnviar();
+})
+
+inputCC.addEventListener("blur", event => {
     validarInput(event.target);
     actualizarEstadoBotónEnviar();
 })
@@ -54,8 +65,10 @@ formulario.addEventListener("submit", event => {
         spinner.classList.add("hidden");
         spinner.classList.remove("flex");
         reiniciarFormulario();
+        desplegarAlertaÉxito();
     }, 3000);
 
+    
 })
 
 function reiniciarFormulario() {
@@ -65,12 +78,10 @@ function reiniciarFormulario() {
 
 function validarInput(input) {   
     
-    if (esVacío(input.value)) {
+    if (input.id !== "cc" && esVacío(input.value)) {
         desplegarAlertaError(input.parentElement, `El ${input.id} es obligatorio`)
-
-    } else if(input.id === INPUT_EMAIL_ID && !validarEmail(input.value)){
+    } else if(IDS_INPUTS_EMAIL.includes(input.id) && !validarEmail(input.value)){
         desplegarAlertaError(input.parentElement, `Ingrese un email valido`)
-        
     } else {
         let alertaError = input.parentElement.querySelector(SELECTOR_CSS_ALERTA_ERROR);
         if(alertaError) alertaError.remove();
@@ -104,6 +115,18 @@ function desplegarAlertaError(nodoHTML, mensajeError) {
 
 }
 
+function desplegarAlertaÉxito() {
+    const alertaÉxito = document.createElement("P");
+    alertaÉxito.setAttribute("class", CLASES_CSS_ALERTA_ÉXITO)
+    alertaÉxito.innerText = "Correo Enviado Correctamente"
+
+    formulario.appendChild(alertaÉxito)
+
+    setTimeout(() => {
+        alertaÉxito.remove();
+    }, 3000);
+} 
+
 function actualizarEstadoBotónEnviar() {
 
     if(hayErrores()){
@@ -131,6 +154,7 @@ function reiniciarCorreoAEnviar() {
     correoAEnviar = {
         email: "",
         asunto: "",
-        mensaje: ""
+        mensaje: "",
+        cc: ""
     }
 }
