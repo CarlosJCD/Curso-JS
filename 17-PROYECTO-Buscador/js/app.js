@@ -1,5 +1,5 @@
 
-const contenedorResultadoBusqueda = document.getElementById("resultado");
+const contenedorResultadoBúsqueda = document.getElementById("resultado");
 
 const selectAños = document.getElementById("year");
 
@@ -35,7 +35,17 @@ selectsFiltros.forEach(selectFiltro => {
 
 
 function desplegarResultadoBúsqueda(autosFiltrados) {
-   contenedorResultadoBusqueda.innerHTML = "";
+   contenedorResultadoBúsqueda.innerHTML = "";
+
+   if (autosFiltrados.length === 0){
+        const mensajeSinResultados = document.createElement("p");
+        mensajeSinResultados.classList.add("alerta","error");
+        mensajeSinResultados.innerText = "Ningún auto coincide con los filtros establecidos"
+        
+        contenedorResultadoBúsqueda.appendChild(mensajeSinResultados);
+
+        return;
+   }
 
    autosFiltrados.forEach(auto => {
         const {marca, modelo, year, precio, puertas, color, transmision} = auto;
@@ -46,7 +56,7 @@ function desplegarResultadoBúsqueda(autosFiltrados) {
         ${marca} - ${modelo} - ${year} - ${puertas} Puertas - Transmisión: ${transmision} - Precio: ${precio} - Color: ${color}
         `;
         
-        contenedorResultadoBusqueda.appendChild(registroAutoHTML);
+        contenedorResultadoBúsqueda.appendChild(registroAutoHTML);
     });
 }
 
