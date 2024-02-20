@@ -9,6 +9,7 @@ const listaTweets = document.getElementById("lista-tweets");
 
 let tweets = [];
 
+
 document.addEventListener("DOMContentLoaded", event => {
     cargarListaTweets();
     desplegarTweetsEnHTML();
@@ -17,12 +18,17 @@ document.addEventListener("DOMContentLoaded", event => {
 formularioTweet.addEventListener("submit", event => {
     event.preventDefault();
 
-    const tweetAgregado = inputTweet.value;
+    const textoTweetNuevo = inputTweet.value;
 
-    if(tweetAgregado === ""){
+    if(textoTweetNuevo === ""){
         desplegarError("No se pueden agregar tweets vacíos");
     } else{ 
-        agregarTweet(tweetAgregado);
+        const nuevoTweet = {
+            id: Date.now(),
+            texto: textoTweetNuevo
+        }
+        agregarTweet(nuevoTweet);
+        actualizarTweetsEnLocalStorage();
         desplegarTweetsEnHTML();
         formularioTweet.reset();
     }
@@ -38,8 +44,10 @@ function cargarListaTweets() {
 
 function agregarTweet(tweet) {
     tweets.push(tweet);
+}
 
-    localStorage.setItem("tweets", JSON.stringify(tweets))
+function actualizarTweetsEnLocalStorage() {
+    localStorage.setItem("tweets", JSON.stringify(tweets));
 }
 
 function desplegarError(mensaje) {
@@ -58,9 +66,25 @@ function desplegarTweetsEnHTML() {
     listaTweets.innerHTML = "";
 
     tweets.forEach(tweet => {
-        const liTweet = document.createElement("LI");
-        liTweet.innerText = tweet;
+        
+        const botónEliminar = document.createElement("a");
+        botónEliminar.classList.add("borrar-tweet");
+        botónEliminar.innerText = "X";
+        botónEliminar.addEventListener("click", event => {
+            event.preventDefault();
 
+            tweets = tweets.filter(tweet => tweet.id != event.target.parentElement.id);
+            event.target.parentElement.remove();
+            
+            actualizarTweetsEnLocalStorage();
+            desplegarTweetsEnHTML();
+        })
+
+        const liTweet = document.createElement("LI");
+        liTweet.innerText = tweet.texto;
+        liTweet.id = tweet.id;
+
+        liTweet.appendChild(botónEliminar);
         listaTweets.appendChild(liTweet);
     })
 }
