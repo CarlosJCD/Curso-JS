@@ -3,14 +3,33 @@ const contenedorResultadoBusqueda = document.getElementById("resultado");
 
 const selectAños = document.getElementById("year");
 
+const selectsFiltros = document.querySelectorAll("select");
+
 const MAX_YEAR = new Date().getFullYear();
 const MIN_YEAR = MAX_YEAR - 10;
 
+const filtrosBúsqueda = {
+    marca: "",
+    year: "",
+    maximo: "",
+    minimo: "",
+    puertas: "",
+    transmision: "",
+    color: ""
+}
 
 document.addEventListener("DOMContentLoaded", event => {
     desplegarResultadoBúsqueda(autos)
     cargarFiltroAños();
+});
+
+
+selectsFiltros.forEach(selectFiltro => {
+    selectFiltro.addEventListener("change", event => {
+        actualizarFiltrosBúsqueda(event.target);
+    })
 })
+
 
 
 function desplegarResultadoBúsqueda(autosFiltrados) {
@@ -37,4 +56,9 @@ function cargarFiltroAños(){
         selectAños.appendChild(añoOption)
 
     }
+}
+
+function actualizarFiltrosBúsqueda(selectFiltro){
+    filtrosBúsqueda[selectFiltro.id] = selectFiltro.value;
+    console.log(filtrosBúsqueda);
 }
