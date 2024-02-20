@@ -8,14 +8,16 @@ const selectsFiltros = document.querySelectorAll("select");
 const MAX_YEAR = new Date().getFullYear();
 const MIN_YEAR = MAX_YEAR - 10;
 
-const filtrosBúsqueda = {
+const ATRIBUTOS_AUTO = Object.keys(autos[0]);
+
+let filtrosBúsqueda = {
     marca: "",
     year: "",
-    maximo: "",
-    minimo: "",
+    maximo: 0,
+    minimo: 0,
     puertas: "",
-    transmision: "",
-    color: ""
+    color: "",
+    transmision: ""
 }
 
 document.addEventListener("DOMContentLoaded", event => {
@@ -27,13 +29,15 @@ document.addEventListener("DOMContentLoaded", event => {
 selectsFiltros.forEach(selectFiltro => {
     selectFiltro.addEventListener("change", event => {
         actualizarFiltrosBúsqueda(event.target);
+        aplicarFiltrosBúsqueda();
     })
 })
 
 
-
 function desplegarResultadoBúsqueda(autosFiltrados) {
-    autosFiltrados.forEach(auto => {
+   contenedorResultadoBusqueda.innerHTML = "";
+
+   autosFiltrados.forEach(auto => {
         const {marca, modelo, year, precio, puertas, color, transmision} = auto;
 
         const registroAutoHTML = document.createElement("p");
@@ -60,5 +64,32 @@ function cargarFiltroAños(){
 
 function actualizarFiltrosBúsqueda(selectFiltro){
     filtrosBúsqueda[selectFiltro.id] = selectFiltro.value;
-    console.log(filtrosBúsqueda);
+}
+
+function aplicarFiltrosBúsqueda() {
+    const autosFiltrados = autos.filter(auto => {
+        for(let atributoAuto of ATRIBUTOS_AUTO){
+            if(atributoAuto === "precio"){
+                if(filtrosBúsqueda["minimo"] && !precioCumpleValorMínimo(auto[atributoAuto])) return false;
+    
+                if(filtrosBúsqueda["maximo"] && !precioCumpleValorMáximo(auto[atributoAuto])) return false;
+            } 
+            if(filtrosBúsqueda[atributoAuto] && !atributoValido(auto[atributoAuto], atributoAuto)) return false;
+        }
+        return true
+    });
+
+    desplegarResultadoBúsqueda(autosFiltrados);
+}
+
+function atributoValido(valorAtributo, nombreAtributo) {
+    return valorAtributo == filtrosBúsqueda[nombreAtributo];
+}
+
+function precioCumpleValorMínimo(precio) {
+    return precio >= filtrosBúsqueda["minimo"];
+}
+
+function precioCumpleValorMáximo(precio) {
+    return precio <= filtrosBúsqueda["maximo"];
 }
