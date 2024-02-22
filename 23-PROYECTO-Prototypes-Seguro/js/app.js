@@ -49,6 +49,7 @@ function VistaHTML() {
     this.selectMarca = document.getElementById("marca")
     this.selectAño = document.getElementById("year");
     this.divResultado = document.getElementById("resultado");
+    this.contenedorAnimaciónDeCarga = document.getElementById("cargando");
 }
 
 VistaHTML.prototype.obtenerInputRadioDelTipoDeSeguro = function() {
@@ -79,6 +80,33 @@ VistaHTML.prototype.desplegarAlerta = function( mensajeDeAlerta, tipoDeAlerta = 
     }, 3000);
 }
 
+VistaHTML.prototype.desplegarAnimaciónDeCarga = function(resultadoADesplegar, contenedorResultado) {
+    this.contenedorAnimaciónDeCarga.classList.remove("hidden");
+
+    setTimeout(() => {
+        this.contenedorAnimaciónDeCarga.classList.add("hidden");
+        contenedorResultado.appendChild(resultadoADesplegar);
+    }, 3000);
+}
+
+VistaHTML.prototype.desplegarCotización = function(seguroAuto) {
+    this.divResultado.innerHTML = "";
+
+    const {marca, año, tipoDeSeguro} = seguroAuto;
+
+    const divResumenCotización = document.createElement("div");
+    divResumenCotización.classList.add("mt-10");
+    divResumenCotización.innerHTML = `
+        <p class="header"> Tu Resumen </p>
+        <p class="font-bold"> Marca: <span class="font-normal"> ${marca === ID_MARCA_AMERICANO ? "Americano" : marca === ID_MARCA_EUROPEO ? "Europeo" : "Asiatico"}</span> </p>
+        <p class="font-bold"> Año: <span class="font-normal"> ${año}</span> </p>
+        <p class="font-bold"> Tipo: <span class="font-normal capitalize"> ${tipoDeSeguro}</span> </p>
+        <p class="font-bold"> Total: <span class="font-normal">$ ${seguroAuto.obtenerCotizaciónSeguro()}</span> </p>
+    `
+    this.desplegarAnimaciónDeCarga(divResumenCotización, this.divResultado)
+
+}
+
 
 let vista = new VistaHTML();
 
@@ -100,9 +128,9 @@ vista.formulario.addEventListener("submit", evento =>{
 
     vista.desplegarAlerta("Cotizando...", "éxito");
 
-    let seguro = new SeguroAuto(marca, año, tipoDeSeguro);
+    let seguroGenerado = new SeguroAuto(marca, año, tipoDeSeguro);
+    vista.desplegarCotización(seguroGenerado);
     
-    console.log(seguro.obtenerCotizaciónSeguro());
 })
 
 
