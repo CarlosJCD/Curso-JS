@@ -25,6 +25,6 @@ const pedro = new Cliente("Pedro", 60000);
 
 console.log(pedro.tipoCliente());
 
-console.log(pedro.nombreClienteSlado());
+console.log(pedro.nombreClienteSaldo());
 
 console.log(pedro);
