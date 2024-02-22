@@ -1,16 +1,22 @@
 const MAX_AÑO = new Date().getFullYear()
 const MIN_AÑO = MAX_AÑO - 20;
 
-function seguroAuto(marca, año, tipo) {
+const CLASES_CSS_ALERTA_ERROR = "mensaje mt-10 error";
+const CLASES_CSS_ALERTA_EXITO = "mensaje mt-10 correcto"
+
+function SeguroAuto(marca, año, tipo) {
     this.marca = marca;
     this.año = año;
     this.tipo = tipo;
 }
 
+
 function VistaHTML() {
+    this.contenedorContenido = document.getElementById("contenido");
     this.formulario = document.getElementById("cotizar-seguro");
     this.selectMarca = document.getElementById("marca")
     this.selectAño = document.getElementById("year");
+    this.divResultado = document.getElementById("resultado");
 }
 
 VistaHTML.prototype.obtenerInputRadioDelTipoDeSeguro = function() {
@@ -26,6 +32,22 @@ VistaHTML.prototype.cargarSelectAños = function() {
     }
 }
 
+VistaHTML.prototype.desplegarAlerta = function( mensajeDeAlerta, tipoDeAlerta = "error" ){
+
+    const divMensajeDeAlerta = document.createElement("div");
+
+    tipoDeAlerta === "error" ? divMensajeDeAlerta.setAttribute("class",CLASES_CSS_ALERTA_ERROR) : divMensajeDeAlerta.setAttribute("class",CLASES_CSS_ALERTA_EXITO) 
+
+    divMensajeDeAlerta.textContent = mensajeDeAlerta;
+
+    this.formulario.insertBefore(divMensajeDeAlerta, this.divResultado);
+
+    setTimeout(() => {
+        divMensajeDeAlerta.remove();
+    }, 3000);
+}
+
+
 let vista = new VistaHTML();
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -40,7 +62,10 @@ vista.formulario.addEventListener("submit", evento =>{
     const tipoDeSeguro = vista.obtenerInputRadioDelTipoDeSeguro().value;
 
     if(!marca || !año || !tipoDeSeguro){
-        console.log("No pasa validación");
+        vista.desplegarAlerta("Todos los campos son obligatorios");
+        return;
     }
+
+    vista.desplegarAlerta("Cotizando...", "éxito");
 })
 
