@@ -34,6 +34,17 @@ class VistaHTML{
             divAlerta.remove();
         }, 3000);
     }
+
+    static actualizarVistaDeGastos(gastosSemanales){
+        this.actualizarGastosDesplegados(gastosSemanales.obtenerGastos());
+        this.actualizarPresupuestoRestanteDesplegado(gastosSemanales.presupuestoInicial, gastosSemanales.PresupuestoRestante);
+    }
+
+    static actualizarGastosDesplegados(gastos){}
+
+    static actualizarPresupuestoRestanteDesplegado(presupuestoInicial, presupuestoRestante){}
+
+    static actualizarLocalStorage(gastos){}
 }
 
 class GastosSemanales{
@@ -46,6 +57,16 @@ class GastosSemanales{
     setPresupuesto(presupuestoInicial){
         this.presupuestoInicial = Number(presupuestoInicial);
         this.presupuestoRestante = Number(presupuestoInicial);
+    }
+
+    agregarGasto(gastoNuevo){
+        this.presupuestoRestante -= gastoNuevo.obtenerCantidadDelGasto();
+
+        this.gastos.push(gastoNuevo);
+    }
+
+    obtenerGastos(){
+        return [...this.gastos];
     }
 }
 
@@ -110,13 +131,18 @@ VistaHTML.formAgregarGasto.addEventListener("submit", evento => {
     const nombreGastoNuevo = VistaHTML.inputNombreGasto.value;
     const cantidadGastoNuevo = VistaHTML.inputCantidadGasto.value;
 
-    const nuevoGasto = new Gasto(nombreGastoNuevo, cantidadGastoNuevo);
+    const gastoNuevo = new Gasto(nombreGastoNuevo, cantidadGastoNuevo);
 
-    if(!nuevoGasto.validarDatosDelGasto()){
-        VistaHTML.desplegarAlertaEnFormulario(nuevoGasto.alerta.mensajeAlerta, nuevoGasto.alerta.tipoDeAlerta);
+    if(!gastoNuevo.validarDatosDelGasto()){
+        VistaHTML.desplegarAlertaEnFormulario(gastoNuevo.alerta.mensajeAlerta, gastoNuevo.alerta.tipoDeAlerta);
     } else{
-        console.log("Desplegando gasto nuevo...");
+        gastoSemanal.agregarGasto(gastoNuevo);
+        
+        VistaHTML.desplegarAlertaEnFormulario("Gasto Agregado Correctamente", "éxito");
 
+        VistaHTML.actualizarVistaDeGastos(gastoSemanal);
+
+        VistaHTML.formAgregarGasto.reset();
     }
 
 
