@@ -1,6 +1,7 @@
 
 const CLASES_CSS_ALERTA = "text-center alert";
-
+const CLASES_CSS_LI_GASTO = "list-group-item d-flex justify-content-between align-items-center"
+const CLASES_CSS_BOTON_ELIMINAR_GASTO = "btn btn-danger borrar-gasto"
 
 const CLASE_CSS_ALERTA_EXITO = "alert-success";
 const CLASE_CSS_ALERTA_ERROR = "alert-danger";
@@ -36,15 +37,43 @@ class VistaHTML{
     }
 
     static actualizarVistaDeGastos(gastosSemanales){
-        this.actualizarGastosDesplegados(gastosSemanales.obtenerGastos());
-        this.actualizarPresupuestoRestanteDesplegado(gastosSemanales.presupuestoInicial, gastosSemanales.PresupuestoRestante);
+        const {gastos, presupuestoInicial, presupuestoRestante} = gastosSemanales
+
+        this.actualizarGastosDesplegados(gastos);
+        this.actualizarPresupuestoRestanteDesplegado(presupuestoInicial, presupuestoRestante);
+
     }
 
-    static actualizarGastosDesplegados(gastos){}
+    static actualizarGastosDesplegados(gastos){
+        this.eliminarHTMLInterno(VistaHTML.ulGastoListado);
+
+        gastos.forEach(gasto => {
+            const liGasto = document.createElement("li");
+            liGasto.setAttribute("class", CLASES_CSS_LI_GASTO);
+            liGasto.dataset.id = gasto.obtenerIdDelGasto();
+
+            liGasto.innerHTML = `
+            ${gasto.obtenerNombreDelGasto()}
+            <span class="badge badge-primary badge-pill">$ ${gasto.obtenerCantidadDelGasto()}</span>
+            `
+
+            const botonBorrarGasto = document.createElement('button');
+            botonBorrarGasto.setAttribute("class", CLASES_CSS_BOTON_ELIMINAR_GASTO);
+            botonBorrarGasto.innerHTML = 'Borrar &times';
+            liGasto.appendChild(botonBorrarGasto);
+
+            VistaHTML.ulGastoListado.appendChild(liGasto);
+        });
+
+    }
 
     static actualizarPresupuestoRestanteDesplegado(presupuestoInicial, presupuestoRestante){}
 
     static actualizarLocalStorage(gastos){}
+
+    static eliminarHTMLInterno(nodoHTML){
+        nodoHTML.innerHTML = "";
+    }
 }
 
 class GastosSemanales{
@@ -71,10 +100,12 @@ class GastosSemanales{
 }
 
 class Gasto{
+    #gastoId;
     #nombreGasto;
     #cantidadGasto;
 
     constructor(nombreGasto, cantidadGasto){
+        this.#gastoId = Date.now();
         this.#nombreGasto = String(nombreGasto);
         this.#cantidadGasto = Number(cantidadGasto);
         this.alerta = {
@@ -106,6 +137,10 @@ class Gasto{
 
     obtenerCantidadDelGasto(){
         return Number(this.#cantidadGasto);
+    }
+
+    obtenerIdDelGasto(){
+        return this.#gastoId;
     }
 
 }
