@@ -67,7 +67,9 @@ class VistaHTML{
 
     }
 
-    static actualizarPresupuestoRestanteDesplegado(presupuestoInicial, presupuestoRestante){}
+    static actualizarPresupuestoRestanteDesplegado(presupuestoInicial, presupuestoRestante){
+        VistaHTML.spanPresupuestoRestante.textContent = presupuestoRestante;
+    }
 
     static actualizarLocalStorage(gastos){}
 
