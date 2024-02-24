@@ -5,6 +5,7 @@ const CLASES_CSS_BOTON_ELIMINAR_GASTO = "btn btn-danger borrar-gasto"
 
 const CLASE_CSS_ALERTA_EXITO = "alert-success";
 const CLASE_CSS_ALERTA_ERROR = "alert-danger";
+const CLASE_CSS_ALERTA_WARNING = "alert-warning"
 
 class VistaHTML{
     static divContenedorPrimario = document.querySelector(".primario");
@@ -15,7 +16,10 @@ class VistaHTML{
 
     static ulGastoListado = document.querySelector("ul.list-group"); 
     static spanPresupuestoInicial = document.getElementById("total")
-    static spanPresupuestoRestante = document.getElementById("restante")
+    
+    static divPresupuestoRestante = document.querySelector(".restante");
+    static spanPresupuestoRestante = document.getElementById("restante");
+
 
     static desplegarPresupuestoInicialYRestante(gastosSemanales){
         this.spanPresupuestoInicial.innerText = gastosSemanales.presupuestoInicial;    
@@ -69,6 +73,17 @@ class VistaHTML{
 
     static actualizarPresupuestoRestanteDesplegado(presupuestoInicial, presupuestoRestante){
         VistaHTML.spanPresupuestoRestante.textContent = presupuestoRestante;
+
+        if(presupuestoRestante <= (presupuestoInicial / 4)){
+            VistaHTML.divPresupuestoRestante.classList.remove(CLASE_CSS_ALERTA_EXITO);
+            VistaHTML.divPresupuestoRestante.classList.add(CLASE_CSS_ALERTA_ERROR);
+        } else if(presupuestoRestante <= (presupuestoInicial / 2)){
+            VistaHTML.divPresupuestoRestante.classList.remove(CLASE_CSS_ALERTA_EXITO);
+            this.divPresupuestoRestante.classList.add(CLASE_CSS_ALERTA_WARNING);
+        } else {
+            VistaHTML.divPresupuestoRestante.classList.remove(CLASE_CSS_ALERTA_ERROR, CLASE_CSS_ALERTA_WARNING);
+            VistaHTML.divPresupuestoRestante.classList.add(CLASE_CSS_ALERTA_EXITO);
+        }
     }
 
     static actualizarLocalStorage(gastos){}
@@ -91,9 +106,17 @@ class GastosSemanales{
     }
 
     agregarGasto(gastoNuevo){
-        this.presupuestoRestante -= gastoNuevo.obtenerCantidadDelGasto();
 
-        this.gastos.push(gastoNuevo);
+        const presupuestoRestanteNuevo = this.presupuestoRestante - gastoNuevo.obtenerCantidadDelGasto();
+
+        if(presupuestoRestanteNuevo < 0){
+            VistaHTML.desplegarAlertaEnFormulario("La cantidad del gasto excede el presupuesto restante", "error");
+            return false;
+        } else{
+            this.gastos.push(gastoNuevo);
+            this.presupuestoRestante = presupuestoRestanteNuevo;
+            return true;
+        }
     }
 
     obtenerGastos(){
@@ -173,13 +196,13 @@ VistaHTML.formAgregarGasto.addEventListener("submit", evento => {
     if(!gastoNuevo.validarDatosDelGasto()){
         VistaHTML.desplegarAlertaEnFormulario(gastoNuevo.alerta.mensajeAlerta, gastoNuevo.alerta.tipoDeAlerta);
     } else{
-        gastoSemanal.agregarGasto(gastoNuevo);
+        let gastoAgregado = gastoSemanal.agregarGasto(gastoNuevo);
         
-        VistaHTML.desplegarAlertaEnFormulario("Gasto Agregado Correctamente", "éxito");
-
-        VistaHTML.actualizarVistaDeGastos(gastoSemanal);
-
-        VistaHTML.formAgregarGasto.reset();
+        if(gastoAgregado){
+            VistaHTML.desplegarAlertaEnFormulario("Gasto Agregado Correctamente", "éxito");
+            VistaHTML.actualizarVistaDeGastos(gastoSemanal);
+            VistaHTML.formAgregarGasto.reset();
+        }
     }
 
 
