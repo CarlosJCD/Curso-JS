@@ -9,6 +9,9 @@ const CLASES_CSS_NOMBRE_MASCOTA = ['card-title', 'font-weight-bolder'];
 const CLASES_CSS_BOTON_ELIMINAR_CITA = ["btn", "btn-danger", "mr-2"];
 const SVG_ELIMINAR_BOTON = '<svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
 
+const CLASES_CSS_BOTON_EDITAR_CITA = ["btn", "btn-info"];
+const SVG_EDITAR_BOTON = '<svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>';
+
 class VistaHTML {
     
     static divContenido = document.getElementById("contenido");
@@ -23,6 +26,8 @@ class VistaHTML {
     static inputFechaDeLaCita = document.getElementById("fecha");
     static inputHoraDeLaCita = document.getElementById("hora");
     static inputSintomasDeLaMascota = document.getElementById("sintomas");
+
+    static botonSubmit = document.querySelector("button[type='submit']");
 
     static ulCitas = document.getElementById("citas");
     
@@ -50,15 +55,11 @@ class VistaHTML {
             divCita.classList.add(...CLASES_CSS_DIV_CITA)
             divCita.dataset.id = cita.citaId;
             
-            VistaHTML.cargarDatosDeLaCita(cita, divCita);
+            VistaHTML.añadirDatosDeLaCita(cita, divCita);
 
             VistaHTML.añadirBotonParaEliminarCita(divCita, cita.citaId);
 
-            const btnEditar = document.createElement("button");
-            btnEditar.onclick = () => {
-            }
-
-            
+            VistaHTML.añadirBotonParaEditarCita(divCita, cita);
 
             return divCita;
         })
@@ -66,8 +67,7 @@ class VistaHTML {
         this.ulCitas.replaceChildren(...listaCitasHTML);
     }
 
-
-    static cargarDatosDeLaCita(cita, divCita) {
+    static añadirDatosDeLaCita(cita, divCita) {
         const {mascota, propietario, telefono, fecha, hora, sintomas} = cita;
 
         const h2NombreMascota = document.createElement("H2");
@@ -92,9 +92,9 @@ class VistaHTML {
         divCita.appendChild(pSintomasMascota);
     }
 
-    static crearParrafoDelCampo(campo, sintomas) {
+    static crearParrafoDelCampo(campo, síntomas) {
         const parrafoCampo = document.createElement("p");
-        parrafoCampo.innerHTML = `<span class="font-weight-bolder">${campo}: </span> ${sintomas}`;
+        parrafoCampo.innerHTML = `<span class="font-weight-bolder">${campo}: </span> ${síntomas}`;
         return parrafoCampo;
     }
 
@@ -111,16 +111,33 @@ class VistaHTML {
         divCita.appendChild(btnEliminar);
     }
 
-    static añadirBotonParaEditarCita(divCita, citaId) {
-        const btnEliminar = document.createElement("button");
-        btnEliminar.classList.add(...CLASES_CSS_BOTON_ELIMINAR_CITA);
-        btnEliminar.innerHTML = `Eliminar ${SVG_ELIMINAR_BOTON}`;
-        btnEliminar.onclick = () => {
-            manejadorCitas.eliminarCita(citaId);
-            VistaHTML.desplegarCitasEnHTML(manejadorCitas.citas);
+    
+    static añadirBotonParaEditarCita(divCita, cita) {
+        const btnEditar = document.createElement("button");
+        btnEditar.classList.add(...CLASES_CSS_BOTON_EDITAR_CITA);
+        btnEditar.innerHTML = `Editar ${SVG_EDITAR_BOTON}`;
+        btnEditar.onclick = () => {
+           this.cargarCitaEnFormulario(cita);
+           this.cambiarBotonAEditarCita();
         };
+        
+        divCita.appendChild(btnEditar);
+    }
 
-        divCita.appendChild(btnEliminar);
+    static cargarCitaEnFormulario(cita){
+        this.inputsFormularioCita.forEach(inputFormulario => {
+            inputFormulario.value = cita[inputFormulario.name]
+        })
+
+        citaEnFormulario = cita;
+    }
+
+    static cambiarBotonAEditarCita(){
+        this.botonSubmit.textContent = "Editar Cita"
+    }
+
+    static cambiarBotonACrearCita(){
+        this.botonSubmit.textContent = "Crear Cita"
     }
 }
 
@@ -146,6 +163,10 @@ class ManejadorCitas{
 
     agregarCita(cita = citaEnFormulario){
         this.citas.push(cita);
+    }
+
+    editarCita(cita = citaEnFormulario){
+
     }
 
     eliminarCita(citaId){
@@ -174,19 +195,23 @@ VistaHTML.inputsFormularioCita.forEach(inputFormulario => {
 VistaHTML.formCita.addEventListener("submit", evento =>{
     evento.preventDefault();
 
-    const alertaValidacion = manejadorCitas.validarDatosCita();
+    if(VistaHTML.botonSubmit.textContent === "Editar Cita"){
+        manejadorCitas.editarCita(citaEnFormulario);
 
-    if(alertaValidacion.tipoDeAlerta === "error"){
-        VistaHTML.desplegarAlertaDelFormulario(alertaValidacion);
-    } else {
-        citaEnFormulario.citaId = Date.now();
+    } else{
+        const alertaValidacion = manejadorCitas.validarDatosCita();
         
-        manejadorCitas.agregarCita(citaEnFormulario);
-
-        VistaHTML.desplegarCitasEnHTML(manejadorCitas.citas);
-
-        reiniciarFormulario();
-
+        if(alertaValidacion.tipoDeAlerta === "error"){
+            VistaHTML.desplegarAlertaDelFormulario(alertaValidacion);
+        } else {
+            citaEnFormulario.citaId = Date.now();
+                
+            manejadorCitas.agregarCita(citaEnFormulario);
+        
+            VistaHTML.desplegarCitasEnHTML(manejadorCitas.citas);
+        
+            reiniciarFormulario();
+        }
     }
 
     
