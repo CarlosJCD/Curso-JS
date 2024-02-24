@@ -38,6 +38,17 @@ class VistaHTML {
         }, 3000);
     }
 
+    static desplegarCitasEnHTML(citas = manejadorCitas.citas){
+        const listaCitasHTML = citas.map(cita => {
+
+            const liCita = document.createElement("li");
+
+
+        })
+
+        this.ulCitas.replaceChildren(...listaCitasHTML);
+    }
+
 }
 
 class ManejadorCitas{
@@ -59,11 +70,15 @@ class ManejadorCitas{
 
         return alertaValidacion;
     }
+
+    agregarCita(cita = citaEnFormulario){
+        this.citas.push(cita);
+    }
 }
 
 const manejadorCitas = new ManejadorCitas();
 
-const citaEnFormulario = {    
+let citaEnFormulario = {    
     mascota: '',
     propietario: '',
     telefono: '',
@@ -86,6 +101,29 @@ VistaHTML.formCita.addEventListener("submit", evento =>{
 
     if(alertaValidacion.tipoDeAlerta === "error"){
         VistaHTML.desplegarAlertaDelFormulario(alertaValidacion);
+    } else {
+        citaEnFormulario.citaId = Date.now();
+        
+        manejadorCitas.agregarCita(citaEnFormulario);
+
+        VistaHTML.desplegarCitasEnHTML(manejadorCitas.citas);
+
+        reiniciarFormulario();
+
     }
+
+    
     
 })
+
+function reiniciarFormulario() {
+    VistaHTML.formCita.reset();
+    citaEnFormulario = {    
+        mascota: '',
+        propietario: '',
+        telefono: '',
+        fecha: '',
+        hora: '',
+        sintomas: '',
+    }
+}
