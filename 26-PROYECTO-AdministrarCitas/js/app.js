@@ -136,7 +136,7 @@ class VistaHTML {
         this.botonSubmit.textContent = "Editar Cita"
     }
 
-    static cambiarBotonACrearCita(){
+    static cambiarTextoBotonACrearCita(){
         this.botonSubmit.textContent = "Crear Cita"
     }
 }
@@ -165,8 +165,8 @@ class ManejadorCitas{
         this.citas.push(cita);
     }
 
-    editarCita(cita = citaEnFormulario){
-
+    editarCita(citaEditada = citaEnFormulario){
+        this.citas = this.citas.map(cita => cita.citaId === citaEditada.citaId ? citaEditada : cita);
     }
 
     eliminarCita(citaId){
@@ -198,6 +198,12 @@ VistaHTML.formCita.addEventListener("submit", evento =>{
     if(VistaHTML.botonSubmit.textContent === "Editar Cita"){
         manejadorCitas.editarCita(citaEnFormulario);
 
+        VistaHTML.cambiarTextoBotonACrearCita();
+
+        VistaHTML.desplegarCitasEnHTML(manejadorCitas.citas);
+
+        reiniciarFormulario();
+
     } else{
         const alertaValidacion = manejadorCitas.validarDatosCita();
         
@@ -213,9 +219,6 @@ VistaHTML.formCita.addEventListener("submit", evento =>{
             reiniciarFormulario();
         }
     }
-
-    
-    
 })
 
 function reiniciarFormulario() {
