@@ -41,17 +41,16 @@ class VistaHTML{
     }
 
     static actualizarVistaDeGastos(gastosSemanales){
-        const {gastos, presupuestoInicial, presupuestoRestante} = gastosSemanales
+        const {presupuestoInicial, presupuestoRestante} = gastosSemanales
 
-        this.actualizarGastosDesplegados(gastos);
+        this.actualizarGastosDesplegados(gastosSemanales);
         this.actualizarPresupuestoRestanteDesplegado(presupuestoInicial, presupuestoRestante);
 
     }
 
-    static actualizarGastosDesplegados(gastos){
-        this.eliminarHTMLInterno(VistaHTML.ulGastoListado);
+    static actualizarGastosDesplegados(gastoSemanal){
 
-        gastos.forEach(gasto => {
+        const nuevosGastosHTML = gastoSemanal.gastos.map(gasto => {
             const liGasto = document.createElement("li");
             liGasto.setAttribute("class", CLASES_CSS_LI_GASTO);
             liGasto.dataset.id = gasto.obtenerIdDelGasto();
@@ -62,12 +61,19 @@ class VistaHTML{
             `
 
             const botonBorrarGasto = document.createElement('button');
+            
             botonBorrarGasto.setAttribute("class", CLASES_CSS_BOTON_ELIMINAR_GASTO);
             botonBorrarGasto.innerHTML = 'Borrar &times';
-            liGasto.appendChild(botonBorrarGasto);
+            botonBorrarGasto.onclick = ()=>{
+                gastoSemanal.eliminarGasto(gasto.obtenerIdDelGasto());
+                VistaHTML.actualizarVistaDeGastos(gastoSemanal);
+            }
 
-            VistaHTML.ulGastoListado.appendChild(liGasto);
+            liGasto.appendChild(botonBorrarGasto);
+            
+            return liGasto;
         });
+        VistaHTML.ulGastoListado.replaceChildren(...nuevosGastosHTML);
 
     }
 
@@ -84,12 +90,6 @@ class VistaHTML{
             VistaHTML.divPresupuestoRestante.classList.remove(CLASE_CSS_ALERTA_ERROR, CLASE_CSS_ALERTA_WARNING);
             VistaHTML.divPresupuestoRestante.classList.add(CLASE_CSS_ALERTA_EXITO);
         }
-    }
-
-    static actualizarLocalStorage(gastos){}
-
-    static eliminarHTMLInterno(nodoHTML){
-        nodoHTML.innerHTML = "";
     }
 }
 
@@ -117,6 +117,14 @@ class GastosSemanales{
             this.presupuestoRestante = presupuestoRestanteNuevo;
             return true;
         }
+    }
+
+    eliminarGasto(idGasto){
+        const gastoAEliminar = this.gastos.find(gasto => gasto.obtenerIdDelGasto() === idGasto )
+
+        this.presupuestoRestante+= gastoAEliminar.obtenerCantidadDelGasto();
+
+        this.gastos = this.gastos.filter(gasto => gasto.obtenerIdDelGasto() !== idGasto );
     }
 
     obtenerGastos(){
