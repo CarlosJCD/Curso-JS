@@ -1,7 +1,15 @@
-import { nombreCliente, ahorroCliente, mostrarAhorroCliente } from "./cliente.js";
+import { Cliente } from "./cliente.js";
+import { Empresa } from "./empresa.js";
 
-console.log(nombreCliente);
+const cliente = new Cliente();
 
-console.log(`Ahorro: ${ahorroCliente}`);
+console.log(cliente.nombreCliente);
 
-console.log(mostrarAhorroCliente(nombreCliente, ahorroCliente));
+console.log(`Ahorro: ${cliente.ahorroCliente}`);
+
+console.log(cliente.mostrarAhorroCliente());
+
+
+const empresa = new Empresa();
+
+console.log(empresa.tipoDeEmpresa);

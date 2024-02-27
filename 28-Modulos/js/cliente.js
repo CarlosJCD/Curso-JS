@@ -1,7 +1,12 @@
 
-export const nombreCliente = "Carlos Calderon"
-export const ahorroCliente = 3500
 
-export function mostrarAhorroCliente(nombreCliente, ahorroCliente) {
-    return `El cliente ${nombreCliente} ha ahorrado ${ahorroCliente} pesos`
+export class Cliente{
+    constructor(nombreCliente = "Carlos Calderon", ahorroCliente = 3500){
+        this.nombreCliente = nombreCliente;
+        this.ahorroCliente = ahorroCliente;
+    }
+
+    mostrarAhorroCliente() {
+        return `El cliente ${this.nombreCliente} ha ahorrado ${this.ahorroCliente} pesos`
+    }
 }
