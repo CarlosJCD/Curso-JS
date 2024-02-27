@@ -10,3 +10,5 @@ export class Cliente{
         return `El cliente ${this.nombreCliente} ha ahorrado ${this.ahorroCliente} pesos`
     }
 }
+
+export default linkEspecial = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
