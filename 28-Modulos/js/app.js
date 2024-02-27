@@ -1,5 +1,7 @@
-import { nombreCliente, ahorro } from "./cliente.js";
+import { nombreCliente, ahorroCliente, mostrarAhorroCliente } from "./cliente.js";
 
 console.log(nombreCliente);
 
-console.log(`Ahorro: ${ahorro}`);
+console.log(`Ahorro: ${ahorroCliente}`);
+
+console.log(mostrarAhorroCliente(nombreCliente, ahorroCliente));
