@@ -1,9 +1,9 @@
-import { VistaHTML } from "./VistaHTML";
-import { ManejadorCitas } from "./ManejadorCitas";
+import VistaHTML from "./classes/VistaHTML.js";
+import ManejadorCitas from "./classes/ManejadorCitas.js";
 
 
 
-const manejadorCitas = new ManejadorCitas();
+export const manejadorCitas = new ManejadorCitas();
 
 
 VistaHTML.inputsFormularioCita.forEach(inputFormulario => {
@@ -22,10 +22,10 @@ VistaHTML.formCita.addEventListener("submit", evento =>{
 
         VistaHTML.desplegarCitasEnHTML(manejadorCitas.citas);
 
-        reiniciarFormulario();
+        VistaHTML.reiniciarFormulario();
 
     } else{
-        const alertaValidacion = manejadorCitas.validarDatosCita();
+        const alertaValidacion = manejadorCitas.validarDatosCita(VistaHTML.citaEnFormulario);
         
         if(alertaValidacion.tipoDeAlerta === "error"){
             VistaHTML.desplegarAlertaDelFormulario(alertaValidacion);

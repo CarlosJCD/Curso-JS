@@ -1,9 +1,10 @@
-export class ManejadorCitas{
+
+export default class ManejadorCitas{
     constructor(){
         this.citas = [];
     }
 
-    validarDatosCita(cita = citaEnFormulario){
+    validarDatosCita(cita){
         const datosCita = Object.values(cita);
         const alertaValidacion = {mensajeAlerta:"Cita registrada con éxito", tipoDeAlerta:"éxito"}
 
@@ -18,7 +19,7 @@ export class ManejadorCitas{
         return alertaValidacion;
     }
 
-    agregarCita(cita = citaEnFormulario){
+    agregarCita(cita){
         this.citas.push(cita);
     }
 

@@ -1,3 +1,5 @@
+import { manejadorCitas } from "../app.js";
+
 const CLASES_CSS_ALERTA = ["text-center", "alert", "d-block", 'col-12'];
 
 const CLASE_CSS_ALERTA_EXITO = "alert-success";
@@ -57,7 +59,7 @@ export default class VistaHTML {
         }, 3000);
     }
 
-    static desplegarCitasEnHTML(citas = manejadorCitas.citas){
+    static desplegarCitasEnHTML(citas = []){
         const listaCitasHTML = citas.map(cita => {
             
             const divCita = document.createElement("div");
