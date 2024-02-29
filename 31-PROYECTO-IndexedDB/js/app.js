@@ -22,12 +22,10 @@ VistaHTML.formCita.addEventListener("submit", evento =>{
 
     if(VistaHTML.botonSubmit.textContent === "Editar Cita"){
         manejadorCitas.editarCita(VistaHTML.citaEnFormulario);
+        
+        editarCitaEnBD(VistaHTML.citaEnFormulario);
 
-        VistaHTML.cambiarTextoBotonACrearCita();
-
-        VistaHTML.desplegarCitasEnHTML(manejadorCitas.citas);
-
-        VistaHTML.reiniciarFormulario();
+        
 
     } else{
         const alertaValidacion = manejadorCitas.validarDatosCita(VistaHTML.citaEnFormulario);
@@ -41,8 +39,8 @@ VistaHTML.formCita.addEventListener("submit", evento =>{
             
             insertarCitaEnBD(VistaHTML.citaEnFormulario);
 
-            VistaHTML.desplegarCitasEnHTML(manejadorCitas.citas);
-        
+            VistaHTML.desplegarCitasEnHTML(baseDeDatosCitas);
+            
             VistaHTML.reiniciarFormulario();
         }
     }
@@ -50,20 +48,21 @@ VistaHTML.formCita.addEventListener("submit", evento =>{
 
 function crearDBCitas() {
     const dbCitas = window.indexedDB.open("citas",1);
-
+    
     dbCitas.onerror = function() {
         console.log("Ocurrió un error al crear la base de datos");
     }
-
+    
     dbCitas.onsuccess = function(){
         baseDeDatosCitas = dbCitas.result;
+        VistaHTML.desplegarCitasEnHTML(baseDeDatosCitas);
     }
 
     dbCitas.onupgradeneeded = function(e){
         const db = e.target.result;
 
         const objectStore = db.createObjectStore("citas", {
-            keypath: "citaId",
+            keyPath: "citaId",
             autoIncrement: true
         });
 
@@ -88,4 +87,25 @@ function insertarCitaEnBD(cita) {
     transaccionInsertarCita.oncomplete =  function(){
          VistaHTML.desplegarAlertaDelFormulario({mensajeAlerta: "Se agregó la cita correctamente", tipoDeAlerta: "exito" }) 
     }
+}
+
+function editarCitaEnBD(citaEditada) {
+    const transaccionEditarCita = baseDeDatosCitas.transaction(["citas"],"readwrite");
+   const objectStore = transaccionEditarCita.objectStore('citas');
+   objectStore.put(citaEditada);
+
+   transaccionEditarCita.oncomplete = ()=>{
+        VistaHTML.cambiarTextoBotonACrearCita();
+
+        VistaHTML.desplegarAlertaDelFormulario({mensajeAlerta: "Cita Editada Exitosamente", tipoDeAlerta: "exito"});
+
+        VistaHTML.desplegarCitasEnHTML(baseDeDatosCitas);
+
+        VistaHTML.reiniciarFormulario();
+   }
+
+   transaccionEditarCita.onerror = (e)=>{
+    console.log(e.target);
+     VistaHTML.desplegarAlertaDelFormulario({mensajeAlerta: "Hubo un error al actualizar la cita, por favor intentelo mas tarde", tipoDeAlerta: "error"});
+   }
 }

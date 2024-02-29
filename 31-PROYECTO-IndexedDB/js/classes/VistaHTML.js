@@ -59,23 +59,32 @@ export default class VistaHTML {
         }, 3000);
     }
 
-    static desplegarCitasEnHTML(citas = []){
-        const listaCitasHTML = citas.map(cita => {
+    static desplegarCitasEnHTML(baseDeDatosCitas){
+        
+        const objectStore = baseDeDatosCitas.transaction('citas').objectStore('citas');
+        
+        const listaCitasHTML = [];
+
+        objectStore.openCursor().onsuccess = (e)=>{
+            const cursor = e.target.result;
+
+            if(cursor){
+                const cita = cursor.value;
+                const divCita = document.createElement("div");
+                divCita.classList.add(...CLASES_CSS_DIV_CITA)
+                divCita.dataset.id = cita.citaId;
             
-            const divCita = document.createElement("div");
-            divCita.classList.add(...CLASES_CSS_DIV_CITA)
-            divCita.dataset.id = cita.citaId;
-            
-            VistaHTML.añadirDatosDeLaCita(cita, divCita);
+                VistaHTML.añadirDatosDeLaCita(cita, divCita);
 
-            VistaHTML.añadirBotonParaEliminarCita(divCita, cita.citaId);
+                VistaHTML.añadirBotonParaEliminarCita(divCita, cita.citaId);
 
-            VistaHTML.añadirBotonParaEditarCita(divCita, cita);
-
-            return divCita;
-        })
-
-        this.ulCitas.replaceChildren(...listaCitasHTML);
+                VistaHTML.añadirBotonParaEditarCita(divCita, cita);
+                listaCitasHTML.push(divCita);
+                cursor.continue()
+            } else {
+                this.ulCitas.replaceChildren(...listaCitasHTML);
+            }
+        }
     }
 
     static añadirDatosDeLaCita(cita, divCita) {
