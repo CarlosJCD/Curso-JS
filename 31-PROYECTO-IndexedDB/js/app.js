@@ -105,7 +105,6 @@ function editarCitaEnBD(citaEditada) {
    }
 
    transaccionEditarCita.onerror = (e)=>{
-    console.log(e.target);
      VistaHTML.desplegarAlertaDelFormulario({mensajeAlerta: "Hubo un error al actualizar la cita, por favor intentelo mas tarde", tipoDeAlerta: "error"});
    }
 }

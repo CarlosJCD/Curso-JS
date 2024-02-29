@@ -76,7 +76,7 @@ export default class VistaHTML {
             
                 VistaHTML.añadirDatosDeLaCita(cita, divCita);
 
-                VistaHTML.añadirBotonParaEliminarCita(divCita, cita.citaId);
+                VistaHTML.añadirBotonParaEliminarCita(divCita, cita.citaId, baseDeDatosCitas);
 
                 VistaHTML.añadirBotonParaEditarCita(divCita, cita);
                 listaCitasHTML.push(divCita);
@@ -118,14 +118,26 @@ export default class VistaHTML {
         return parrafoCampo;
     }
 
-    static añadirBotonParaEliminarCita(divCita, citaId) {
+    static añadirBotonParaEliminarCita(divCita, citaId, baseDeDatosCitas) {
         const btnEliminar = document.createElement("button");
         btnEliminar.classList.add(...CLASES_CSS_BOTON_ELIMINAR_CITA);
         btnEliminar.innerHTML = `Eliminar ${SVG_ELIMINAR_BOTON}`;
         btnEliminar.onclick = () => {
             manejadorCitas.eliminarCita(citaId);
-            VistaHTML.desplegarCitasEnHTML(manejadorCitas.citas);
-            VistaHTML.desplegarAlertaDelFormulario({mensajeAlerta:"Se eliminó la cita correctamente"});
+
+            const transaccionEliminarCita = baseDeDatosCitas.transaction(["citas"],"readwrite");
+            const objectStore = transaccionEliminarCita.objectStore('citas');
+
+            objectStore.delete(citaId);
+
+            transaccionEliminarCita.oncomplete = ()=>{
+                VistaHTML.desplegarAlertaDelFormulario({mensajeAlerta:"Se eliminó la cita correctamente"});
+                VistaHTML.desplegarCitasEnHTML(baseDeDatosCitas);
+            }
+
+            transaccionEliminarCita.onerror = ()=>{
+                VistaHTML.desplegarAlertaDelFormulario({mensajeAlerta: "Hubo un error al eliminar la cita, por favor intentelo mas tarde", tipoDeAlerta: "error"});
+            }
         };
 
         divCita.appendChild(btnEliminar);
