@@ -38,7 +38,9 @@ VistaHTML.formCita.addEventListener("submit", evento =>{
             VistaHTML.citaEnFormulario.citaId = Date.now();
                 
             manejadorCitas.agregarCita(VistaHTML.citaEnFormulario);
-        
+            
+            insertarCitaEnBD(VistaHTML.citaEnFormulario);
+
             VistaHTML.desplegarCitasEnHTML(manejadorCitas.citas);
         
             VistaHTML.reiniciarFormulario();
@@ -74,5 +76,16 @@ function crearDBCitas() {
          objectStore.createIndex("sintomas", "sintomas", {unique: false});
 
     }
+}
 
+function insertarCitaEnBD(cita) {
+    const transaccionInsertarCita = baseDeDatosCitas.transaction(['citas'], "readwrite")
+
+    const objectStore = transaccionInsertarCita.objectStore("citas");
+
+    objectStore.add(cita);
+
+    transaccionInsertarCita.oncomplete =  function(){
+         VistaHTML.desplegarAlertaDelFormulario({mensajeAlerta: "Se agregó la cita correctamente", tipoDeAlerta: "exito" }) 
+    }
 }
