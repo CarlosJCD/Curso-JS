@@ -8,7 +8,7 @@ const ID_ALERTA_EXITO = "alerta-exito"
 
 
 export default class VistaHTMLFormularioCliente{
-    static formNuevoCliente = document.getElementById("formulario");
+    static formCliente = document.getElementById("formulario");
     static inputNombreCliente = document.getElementById("nombre");
     static inputCorreoCliente = document.getElementById("email");
     static inputTelefonoCliente = document.getElementById("telefono");
@@ -22,7 +22,7 @@ export default class VistaHTMLFormularioCliente{
         divAlerta.id = ID_ALERTA_ERROR;
         divAlerta.textContent = mensaje;
 
-        this.formNuevoCliente.appendChild(divAlerta);
+        this.formCliente.appendChild(divAlerta);
 
         setTimeout( () => {
             divAlerta.remove();
@@ -37,7 +37,7 @@ export default class VistaHTMLFormularioCliente{
         divAlerta.id = ID_ALERTA_EXITO;
         divAlerta.textContent = mensaje;
 
-        this.formNuevoCliente.appendChild(divAlerta);
+        this.formCliente.appendChild(divAlerta);
 
         setTimeout( () => {
             divAlerta.remove();

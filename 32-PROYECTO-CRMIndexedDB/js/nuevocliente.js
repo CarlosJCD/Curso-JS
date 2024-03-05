@@ -1,9 +1,10 @@
 import VistaHTMLFormularioCliente from "./modules/VistaHTMLFormularioCliente.js";
 import { crearConexionDB, registrarCliente } from "./modules/database.js";
+import { validarCliente } from "./modules/validaciones.js";
 
 document.addEventListener("DOMContentLoaded", () => crearConexionDB())
 
-VistaHTMLFormularioCliente.formNuevoCliente.addEventListener("submit", evento => {
+VistaHTMLFormularioCliente.formCliente.addEventListener("submit", evento => {
     evento.preventDefault();
 
     const clienteNuevo = {
@@ -13,14 +14,14 @@ VistaHTMLFormularioCliente.formNuevoCliente.addEventListener("submit", evento =>
         empresa: VistaHTMLFormularioCliente.inputEmpresaCliente.value
     }
 
-    const respuestaValidacion = validarInformacionClienteNuevo(clienteNuevo);
+    const respuestaValidacion = validarCliente(clienteNuevo);
 
     if(respuestaValidacion.ok){
         clienteNuevo.id = Date.now();
         registrarCliente(clienteNuevo).then(result =>{
             if(result){
                 VistaHTMLFormularioCliente.desplegarAlertaExito("Cliente registrado exitosamente")
-                VistaHTMLFormularioCliente.formNuevoCliente.reset()
+                VistaHTMLFormularioCliente.formCliente.reset()
                 setTimeout(() => {
                     window.location.href = "index.html"
                 }, 3000);
@@ -36,20 +37,3 @@ VistaHTMLFormularioCliente.formNuevoCliente.addEventListener("submit", evento =>
 
 })
 
-function validarInformacionClienteNuevo(clienteNuevo = {nombre:"", email: "",telefono: "",empresa: ""}){
-    
-    if(clienteNuevo.nombre === ""){
-        return {ok: false, mensaje: "Por favor ingrese el nombre del cliente"}
-    }
-    if(clienteNuevo.email === ""){
-        return {ok: false, mensaje: "Por favor ingrese el correo del cliente"}
-    }
-    if(clienteNuevo.telefono === ""){
-        return {ok: false, mensaje: "Por favor ingrese el telefono del cliente"}
-    }
-    if(clienteNuevo.empresa === ""){
-        return {ok: false, mensaje: "Por favor ingrese el nombre de la empresa"}
-    }
-    
-    return {ok: true}
-}

@@ -97,7 +97,7 @@ export function obtenerClientesDeLaBD() {
 
 /**
  * 
- * @param {stringr} idCliente 
+ * @param {string} idCliente 
  */
 export function obtenerClientePorId(idCliente) {
     return new Promise((resolve, reject) =>{
@@ -111,11 +111,40 @@ export function obtenerClientePorId(idCliente) {
                 const cliente = resultadoBusqueda.result;
                 if(cliente) resolve(cliente);
 
-                reject("Cliente no encontrado");
+                reject(new Error("Cliente no encontrado"));
             }
 
             resultadoBusqueda.onerror = (e) => {
                 reject(e);
+            }
+        })
+    })
+}
+
+/**
+ * @param {Object} cliente
+ * @param {string} cliente.nombre
+ * @param {string} cliente.email
+ * @param {string} cliente.telefono
+ * @param {string} cliente.empresa
+ */
+
+export function actualizarRegistroCliente(cliente) {
+    return new Promise((resolve, reject)=>{
+        crearConexionDB().then((db)=>{
+            const transaccionActualizarCliente = db.transaction(['crm'], "readwrite");
+            const crmObjectStore = transaccionActualizarCliente.objectStore('crm');
+
+            crmObjectStore.put(cliente);
+
+            transaccionActualizarCliente.oncomplete = ()=>{
+                resolve(true);
+            }
+
+            transaccionActualizarCliente.onerror = (evento) =>{
+                console.log(cliente);
+                console.log(evento);
+                reject(false)
             }
         })
     })
