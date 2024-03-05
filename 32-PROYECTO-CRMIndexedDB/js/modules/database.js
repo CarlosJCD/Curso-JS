@@ -1,5 +1,3 @@
-import VistaHTMLNuevoCliente from "./VistaHTMLNuevoCliente.js";
-
 let crmDB;
 
 export function crearDBClientes() {
@@ -31,16 +29,18 @@ export function crearDBClientes() {
 
 
 export function crearConexionDB() {
-    let conexion = window.indexedDB.open("crm",1);
+    return new Promise((result, reject) =>{
+        let conexion = window.indexedDB.open("crm",1);
     
-    conexion.onerror = (e) =>{
-        console.log(e);
-    }
-
-    conexion.onsuccess = ()=>{
-        crmDB = conexion.result;
-        console.log(crmDB);
-    }
+        conexion.onerror = (e) =>{
+            reject(e);
+        }
+    
+        conexion.onsuccess = ()=>{
+            result(conexion.result);
+        }
+    })
+   
 }
 
 /**
@@ -71,4 +71,26 @@ export function registrarCliente(clienteNuevo) {
         resolve(true)
     }
    })
+}
+
+export function obtenerClientesDeLaBD() { 
+    return new Promise((resolve, reject) => {
+        crearConexionDB().then( (db) => {
+            const objectStore = db.transaction('crm').objectStore('crm');
+
+            const clientes = [];
+
+            objectStore.openCursor().onsuccess = (e) =>{
+                const cursor = e.target.result;
+
+                if(cursor){
+                    clientes.push(cursor.value);
+                    cursor.continue();
+                } else{
+                    resolve(clientes);
+                }
+            }
+
+        })
+    })
 }
