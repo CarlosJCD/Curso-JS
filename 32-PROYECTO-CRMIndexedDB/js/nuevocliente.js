@@ -1,16 +1,16 @@
-import VistaHTMLNuevoCliente from "./modules/VistaHTMLNuevoCliente.js";
+import VistaHTMLFormularioCliente from "./modules/VistaHTMLFormularioCliente.js";
 import { crearConexionDB, registrarCliente } from "./modules/database.js";
 
 document.addEventListener("DOMContentLoaded", () => crearConexionDB())
 
-VistaHTMLNuevoCliente.formNuevoCliente.addEventListener("submit", evento => {
+VistaHTMLFormularioCliente.formNuevoCliente.addEventListener("submit", evento => {
     evento.preventDefault();
 
     const clienteNuevo = {
-        nombre: VistaHTMLNuevoCliente.inputNombreCliente.value,
-        email: VistaHTMLNuevoCliente.inputCorreoCliente.value,
-        telefono: VistaHTMLNuevoCliente.inputTelefonoCliente.value,
-        empresa: VistaHTMLNuevoCliente.inputEmpresaCliente.value
+        nombre: VistaHTMLFormularioCliente.inputNombreCliente.value,
+        email: VistaHTMLFormularioCliente.inputCorreoCliente.value,
+        telefono: VistaHTMLFormularioCliente.inputTelefonoCliente.value,
+        empresa: VistaHTMLFormularioCliente.inputEmpresaCliente.value
     }
 
     const respuestaValidacion = validarInformacionClienteNuevo(clienteNuevo);
@@ -19,17 +19,17 @@ VistaHTMLNuevoCliente.formNuevoCliente.addEventListener("submit", evento => {
         clienteNuevo.id = Date.now();
         registrarCliente(clienteNuevo).then(result =>{
             if(result){
-                VistaHTMLNuevoCliente.desplegarAlertaExito("Cliente registrado exitosamente")
-                VistaHTMLNuevoCliente.formNuevoCliente.reset()
+                VistaHTMLFormularioCliente.desplegarAlertaExito("Cliente registrado exitosamente")
+                VistaHTMLFormularioCliente.formNuevoCliente.reset()
                 setTimeout(() => {
                     window.location.href = "index.html"
                 }, 3000);
             } else{
-                VistaHTMLNuevoCliente.desplegarAlertaError("Ha ocurrido un error al registrar el cliente, por favor inténtelo mas tarde.");
+                VistaHTMLFormularioCliente.desplegarAlertaError("Ha ocurrido un error al registrar el cliente, por favor inténtelo mas tarde.");
             }
         });
     } else{
-        VistaHTMLNuevoCliente.desplegarAlertaError(respuestaValidacion.mensaje);
+        VistaHTMLFormularioCliente.desplegarAlertaError(respuestaValidacion.mensaje);
     }
 
 

@@ -7,7 +7,7 @@ const CLASES_CSS_ALERTA_EXITO = ['bg-green-100', "border-green-400", "text-green
 const ID_ALERTA_EXITO = "alerta-exito"
 
 
-export default class VistaHTMLNuevoCliente{
+export default class VistaHTMLFormularioCliente{
     static formNuevoCliente = document.getElementById("formulario");
     static inputNombreCliente = document.getElementById("nombre");
     static inputCorreoCliente = document.getElementById("email");
@@ -48,4 +48,20 @@ export default class VistaHTMLNuevoCliente{
         return document.getElementById(idAlerta);
     }
 
+
+    /**
+     * 
+     * @param {Object} clienteNuevo 
+     * @param {string} clienteNuevo.nombre
+     * @param {string} clienteNuevo.email
+     * @param {string} clienteNuevo.telefono
+     * @param {string} clienteNuevo.empresa
+    */
+    static desplegarClienteEnELFormulario(cliente){
+        const { nombre, email, telefono, empresa } = cliente;
+        this.inputNombreCliente.value= nombre;
+        this.inputCorreoCliente.value= email;
+        this.inputTelefonoCliente.value= telefono;
+        this.inputEmpresaCliente.value= empresa;
+    }
 }

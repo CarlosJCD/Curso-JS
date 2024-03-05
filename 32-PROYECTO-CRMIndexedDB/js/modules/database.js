@@ -28,7 +28,7 @@ export function crearDBClientes() {
 }
 
 
-export function crearConexionDB() {
+function crearConexionDB() {
     return new Promise((result, reject) =>{
         let conexion = window.indexedDB.open("crm",1);
     
@@ -91,6 +91,32 @@ export function obtenerClientesDeLaBD() {
                 }
             }
 
+        })
+    })
+}
+
+/**
+ * 
+ * @param {stringr} idCliente 
+ */
+export function obtenerClientePorId(idCliente) {
+    return new Promise((resolve, reject) =>{
+        crearConexionDB().then((db)=>{
+            const transaccionObtenerClientePorId = db.transaction(['crm'], "readwrite");
+            const objectStore = transaccionObtenerClientePorId.objectStore('crm');
+
+            const resultadoBusqueda = objectStore.get(idCliente);
+
+            resultadoBusqueda.onsuccess = ()=>{
+                const cliente = resultadoBusqueda.result;
+                if(cliente) resolve(cliente);
+
+                reject("Cliente no encontrado");
+            }
+
+            resultadoBusqueda.onerror = (e) => {
+                reject(e);
+            }
         })
     })
 }
