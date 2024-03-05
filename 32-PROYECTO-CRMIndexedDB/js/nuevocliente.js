@@ -1,6 +1,9 @@
 import VistaHTMLNuevoCliente from "./modules/VistaHTMLNuevoCliente.js";
+import { crearConexionDB, registrarCliente } from "./modules/database.js";
 
-VistaHTMLNuevoCliente.formNuevoCliente.addEventListener("submit",(evento)=>{
+document.addEventListener("DOMContentLoaded", () => crearConexionDB())
+
+VistaHTMLNuevoCliente.formNuevoCliente.addEventListener("submit", evento => {
     evento.preventDefault();
 
     const clienteNuevo = {
@@ -12,7 +15,23 @@ VistaHTMLNuevoCliente.formNuevoCliente.addEventListener("submit",(evento)=>{
 
     const respuestaValidacion = validarInformacionClienteNuevo(clienteNuevo);
 
-    if(!respuestaValidacion.ok) VistaHTMLNuevoCliente.desplegarAlertaError(respuestaValidacion.mensaje);
+    if(respuestaValidacion.ok){
+        clienteNuevo.id = Date.now();
+        registrarCliente(clienteNuevo).then(result =>{
+            if(result){
+                VistaHTMLNuevoCliente.desplegarAlertaExito("Cliente registrado exitosamente")
+                VistaHTMLNuevoCliente.formNuevoCliente.reset()
+                setTimeout(() => {
+                    window.location.href = "index.html"
+                }, 3000);
+            } else{
+                VistaHTMLNuevoCliente.desplegarAlertaError("Ha ocurrido un error al registrar el cliente, por favor inténtelo mas tarde.");
+            }
+        });
+    } else{
+        VistaHTMLNuevoCliente.desplegarAlertaError(respuestaValidacion.mensaje);
+    }
+
 
 
 })

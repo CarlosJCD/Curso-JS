@@ -1,3 +1,4 @@
+import VistaHTMLNuevoCliente from "./VistaHTMLNuevoCliente.js";
 
 let crmDB;
 
@@ -12,7 +13,7 @@ export function crearDBClientes() {
         crmDB = db.result;
     }
 
-    crearDB.onupgradeneeded = (e) => {
+    db.onupgradeneeded = (e) => {
         const db = e.target.result;
 
         const objectStore = db.createObjectStore("crm",{keyPath: 'id', autoIncrement: true});
@@ -28,8 +29,9 @@ export function crearDBClientes() {
 
 }
 
+
 export function crearConexionDB() {
-    const conexion = window.indexedDB.open("crm",1);
+    let conexion = window.indexedDB.open("crm",1);
     
     conexion.onerror = (e) =>{
         console.log(e);
@@ -37,11 +39,36 @@ export function crearConexionDB() {
 
     conexion.onsuccess = ()=>{
         crmDB = conexion.result;
+        console.log(crmDB);
     }
-
-    return crmDB;
 }
 
-export function registrarCliente(params) {
+/**
+ * 
+ * @param {Object} clienteNuevo 
+ * @param {string} clienteNuevo.nombre
+ * @param {string} clienteNuevo.email
+ * @param {string} clienteNuevo.telefono
+ * @param {string} clienteNuevo.empresa
+ * 
+ * @returns {Promise}
+ */
+export function registrarCliente(clienteNuevo) {
+   return new Promise((resolve, reject) => {
+    const transaccionRegistrarCliente = crmDB.transaction(['crm'], "readwrite");
+
+    const objectStoreRegistrarCliente = transaccionRegistrarCliente.objectStore('crm');
+
+    objectStoreRegistrarCliente.add(clienteNuevo);
+
+    transaccionRegistrarCliente.onerror = (evento) =>{
+        console.log(clienteNuevo);
+        console.log(evento);
+        resolve(false)
+    }
     
+    transaccionRegistrarCliente.oncomplete = () => {
+        resolve(true)
+    }
+   })
 }
