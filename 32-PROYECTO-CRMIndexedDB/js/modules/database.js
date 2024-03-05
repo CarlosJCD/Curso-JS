@@ -1,7 +1,7 @@
 
 let crmDB;
 
-export function crearDB() {
+export function crearDBClientes() {
     const db = window.indexedDB.open("crm", 1);
 
     db.onerror = () =>{
@@ -26,4 +26,22 @@ export function crearDB() {
     }
 
 
+}
+
+export function crearConexionDB() {
+    const conexion = window.indexedDB.open("crm",1);
+    
+    conexion.onerror = (e) =>{
+        console.log(e);
+    }
+
+    conexion.onsuccess = ()=>{
+        crmDB = conexion.result;
+    }
+
+    return crmDB;
+}
+
+export function registrarCliente(params) {
+    
 }
