@@ -1,6 +1,6 @@
 const btnCargarJSONObjeto = document.getElementById("cargarJSONArray");
 
-btnCargarJSONObjeto.onclick = imprimirEnCosnsolaObjetoJSON;
+btnCargarJSONObjeto.onclick = imprimirEnConsolaObjetoJSON;
 
 function imprimirEnConsolaObjetoJSON(e){
     urlArchivoJSON = 'data/empleados.json'
