@@ -54,23 +54,25 @@ function crearConexionDB() {
  * @returns {Promise}
  */
 export function registrarCliente(clienteNuevo) {
-   return new Promise((resolve, reject) => {
-    const transaccionRegistrarCliente = crmDB.transaction(['crm'], "readwrite");
+    return new Promise((resolve, reject) => {
+        crearConexionDB().then((db) => {
+            const transaccionRegistrarCliente = db.transaction(["crm"], "readwrite");
 
-    const objectStoreRegistrarCliente = transaccionRegistrarCliente.objectStore('crm');
+            const objectStoreRegistrarCliente = transaccionRegistrarCliente.objectStore("crm");
 
-    objectStoreRegistrarCliente.add(clienteNuevo);
+            objectStoreRegistrarCliente.add(clienteNuevo);
 
-    transaccionRegistrarCliente.onerror = (evento) =>{
-        console.log(clienteNuevo);
-        console.log(evento);
-        resolve(false)
-    }
-    
-    transaccionRegistrarCliente.oncomplete = () => {
-        resolve(true)
-    }
-   })
+            transaccionRegistrarCliente.onerror = (evento) => {
+                console.log(clienteNuevo);
+                console.log(evento);
+                resolve(false);
+            };
+
+            transaccionRegistrarCliente.oncomplete = () => {
+                resolve(true);
+            };
+        });
+    });
 }
 
 export function obtenerClientesDeLaBD() { 
@@ -148,4 +150,27 @@ export function actualizarRegistroCliente(cliente) {
             }
         })
     })
+}
+
+/**
+ * 
+ * @param {int} idCliente 
+ */
+export function eliminarRegistroCliente(idCliente) {
+    return new Promise((resolve, reject) => {
+        crearConexionDB().then((db)=>{
+            const transaccionEliminarRegistroCliente = db.transaction(['crm'], "readwrite");
+            const objectStore = transaccionEliminarRegistroCliente.objectStore('crm');
+
+            objectStore.delete(idCliente);
+
+            transaccionEliminarRegistroCliente.oncomplete = ()=>{
+                resolve(true)
+            }
+
+            transaccionEliminarRegistroCliente.onerror = ()=>{
+                reject(new Error("Error al eliminar el cliente con id" + idCliente))
+            }
+        })
+    })    
 }

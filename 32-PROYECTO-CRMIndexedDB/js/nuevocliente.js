@@ -1,8 +1,6 @@
 import VistaHTMLFormularioCliente from "./modules/VistaHTMLFormularioCliente.js";
-import { crearConexionDB, registrarCliente } from "./modules/database.js";
+import {registrarCliente } from "./modules/database.js";
 import { validarCliente } from "./modules/validaciones.js";
-
-document.addEventListener("DOMContentLoaded", () => crearConexionDB())
 
 VistaHTMLFormularioCliente.formCliente.addEventListener("submit", evento => {
     evento.preventDefault();

@@ -2,7 +2,6 @@ import VistaHTMLFormularioCliente from "./modules/VistaHTMLFormularioCliente.js"
 import { actualizarRegistroCliente, obtenerClientePorId } from "./modules/database.js";
 import { validarCliente } from "./modules/validaciones.js";
 
-
 let idCliente;
 
 document.addEventListener("DOMContentLoaded",()=>{
