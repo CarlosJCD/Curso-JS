@@ -1,8 +1,9 @@
+import { obtenerClimaDeLaAPI } from "./modules/APIClima.js";
 import { desplegarAlertaDeError, formClima, inputCiudad, selectPais } from "./modules/VistaHTML.js"
-import { validarFormularioDelClima } from "./modules/validaciones.js";
+import { validarDatosClima, validarFormularioDelClima } from "./modules/validaciones.js";
 
 
-document.addEventListener("DOMContentLoaded", () =>{
+document.addEventListener("DOMContentLoaded",  () =>{
     formClima.addEventListener('submit', (evento)=>{
         evento.preventDefault()
 
@@ -10,11 +11,28 @@ document.addEventListener("DOMContentLoaded", () =>{
 
         const pais = selectPais.value;
 
-        const resultadoValidacion = validarFormularioDelClima(ciudad, pais);
+        const resultadoValidacionFormulario = validarFormularioDelClima(ciudad, pais);
 
-        if(!resultadoValidacion.ok){
+        if(!resultadoValidacionFormulario.ok){
             desplegarAlertaDeError(resultadoValidacion.mensaje);
         }
+
+        obtenerClimaDeLaAPI(ciudad, pais).then(datosClima =>{
+            
+            const resultadoValidacionDatosClima = validarDatosClima(datosClima);
+
+            if(!resultadoValidacionDatosClima.ok){
+                desplegarAlertaDeError(resultadoValidacionDatosClima.mensaje);
+                return;
+            }
+
+            
+
+        });
+        
+
+        
+
 
 
     });

@@ -21,3 +21,16 @@ export function validarFormularioDelClima(ciudad, pais) {
     
     return {ok: true, mensaje: ""}
 }
+
+/**
+ * 
+ * @returns {respuestaValidacion} - Respuesta de la validación
+ * 
+ */
+export function validarDatosClima(datosClima){
+    if(datosClima.cod === "404"){
+        return {ok: false, mensaje: "Ciudad no encontrada"}
+    }
+
+    return {ok: true}
+}
