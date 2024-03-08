@@ -1,5 +1,5 @@
 import { obtenerClimaDeLaAPI } from "./modules/APIClima.js";
-import { desplegarAlertaDeError, formClima, inputCiudad, selectPais } from "./modules/VistaHTML.js"
+import { desplegarAlertaDeError, desplegarDatosClima, desplegarSpinner, formClima, inputCiudad, selectPais } from "./modules/VistaHTML.js"
 import { validarDatosClima, validarFormularioDelClima } from "./modules/validaciones.js";
 
 
@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded",  () =>{
         evento.preventDefault()
 
         const ciudad = inputCiudad.value;
-
         const pais = selectPais.value;
 
         const resultadoValidacionFormulario = validarFormularioDelClima(ciudad, pais);
@@ -17,6 +16,7 @@ document.addEventListener("DOMContentLoaded",  () =>{
             desplegarAlertaDeError(resultadoValidacion.mensaje);
         }
 
+        desplegarSpinner();
         obtenerClimaDeLaAPI(ciudad, pais).then(datosClima =>{
             
             const resultadoValidacionDatosClima = validarDatosClima(datosClima);
@@ -26,14 +26,8 @@ document.addEventListener("DOMContentLoaded",  () =>{
                 return;
             }
 
-            
-
+            desplegarDatosClima(datosClima);
         });
-        
-
-        
-
-
 
     });
 })
