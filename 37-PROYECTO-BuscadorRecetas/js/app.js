@@ -1,5 +1,5 @@
 import { obtenerCategoriasDeLaAPI, obtenerPlatillosDeLaCategoria } from "./modules/API.js";
-import { selectCategorias, desplegarCategorias, desplegarPlatillosDeLaCategoria,  } from "./modules/vistaHTML.js"
+import { selectCategorias, desplegarCategorias, desplegarPlatillos,  } from "./modules/vistaHTML.js"
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -15,5 +15,5 @@ function cargarCategoriasDeLaAPI(){
 function cargarPlatillosDeLaCategoriaSeleccionada(evento) {
     const categoriaSeleccionada = evento.target.value;
 
-    obtenerPlatillosDeLaCategoria(categoriaSeleccionada).then(platillos => desplegarPlatillosDeLaCategoria(platillos));
+    obtenerPlatillosDeLaCategoria(categoriaSeleccionada).then(platillos => desplegarPlatillos(platillos));
 }

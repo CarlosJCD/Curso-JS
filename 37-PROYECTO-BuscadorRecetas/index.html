@@ -49,11 +49,11 @@
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-3 font-bold" id="staticBackdropLabel"></h1>
+                    <h1 id="modal-title" class="modal-title fs-3 font-bold" id="staticBackdropLabel"></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body"></div>
-                <div class="modal-footer flex justify-content-between"></div>
+                <div id="modal-body" class="modal-body"></div>
+                <div id="modal-footer" class="modal-footer flex justify-content-between"></div>
             </div>
         </div>
     </div>
@@ -65,13 +65,13 @@
                 <strong class="me-auto text-white">App Recetas</strong>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="toast-body"></div>
+            <div class="toast-body" id="toast-body"></div>
         </div>
     </div>
 
   
 
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/app.js" type="module"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="./js/app.js" type="module"></script>
 </body>
 </html>
