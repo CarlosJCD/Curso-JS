@@ -1,5 +1,6 @@
-import { formBuscarImagenes, inputBusqueda, desplegarAlertaDeErrorDelFormulario } from "./modules/vistaHTML.js";
+import { formBuscarImagenes, inputBusqueda, desplegarAlertaDeErrorDelFormulario, desplegarImagenes } from "./modules/vistaHTML.js";
 import { validarBusquedaDeImagenes } from "./modules/validacion.js";
+import { buscarImagenesDelTerminoDeBusqueda } from "./modules/API.js";
 
 document.addEventListener("DOMContentLoaded", ()=>{
      formBuscarImagenes.addEventListener("submit", evento => {
@@ -11,6 +12,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
         if(!respuestaValidacionTerminoBusqueda.ok){
             desplegarAlertaDeErrorDelFormulario(respuestaValidacionTerminoBusqueda.mensaje);
+            return;
         }
+
+        buscarImagenesDelTerminoDeBusqueda(terminoBusqueda).then(imagenes => desplegarImagenes(imagenes));
      })
 })
