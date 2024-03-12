@@ -1,8 +1,9 @@
 import Imagen from "../types/Imagen.js";
+import { buscarImagenesDelTerminoDeBusqueda } from "./API.js";
 
 const CLASES_TAILWIND_PARRAFO_ERROR = ['bg-red-100', "border-red-400", "text-red-700", "px-4", "py-3", "rounded",  "max-w-lg", "mx-auto", "mt-6", "text-center"];
 const CLASES_TAILWIND_DIV_CONTENEDOR_IMAGEN = ["w-1/2", "md:w-1/3", "lg:w-1/4", "mb-4", "p-3"];
-
+const CLASES_TAILWIND_ENLACE_PAGINA = ['siguiente', 'bg-yellow-400', 'px-4', 'py-1', 'mr-2', 'mx-auto', 'mb-10', 'font-bold', 'uppercase', 'rounded'];
 const ID_ALERTA_ERROR = "alertaError";
 
 export const divResultado = document.getElementById("resultado");
@@ -10,6 +11,14 @@ export const divResultado = document.getElementById("resultado");
 export const formBuscarImagenes = document.getElementById("formulario");
 
 export const inputBusqueda = document.getElementById("termino");
+
+const divPaginacion = document.getElementById("paginacion");
+
+let paginasTotales;
+
+let paginaActual;
+
+
 
 /**
  * 
@@ -84,7 +93,7 @@ function construirDivsImagenes(imagenes) {
  * @returns {HTMLDivElement}
  */
 function construirDivContenedorImagen(imagen) {
-    const { previewURL, likes, views, largeImageURL} = imagen
+    const { previewURL, likes, views, largeImageURL} = imagen;
 
     const divContenedorImagen = document.createElement("div");
     divContenedorImagen.classList.add(...CLASES_TAILWIND_DIV_CONTENEDOR_IMAGEN);
@@ -104,4 +113,40 @@ function construirDivContenedorImagen(imagen) {
     `
 
     return divContenedorImagen;
+}
+
+
+/**
+ * 
+ * @param {number} totalNumberOfPages 
+ */
+export function desplegarPaginacion(numeroTotalDeImagenes) {
+    const totalDePaginas = Math.ceil(numeroTotalDeImagenes / 30);
+
+    const enlacesPaginacion = [];
+    for (let paginaActual = 1; paginaActual < totalDePaginas; paginaActual++) {
+        enlacesPaginacion.push(construirEnlacePaginacion(paginaActual))
+    }
+
+    divPaginacion.replaceChildren(...enlacesPaginacion);
+}
+
+/**
+ * 
+ * @param {number} numeroDePagina 
+ * 
+ * @returns {HTMLAnchorElement}
+ */
+function construirEnlacePaginacion(numeroDePagina) {
+    const enlacePagina = document.createElement('a');
+    enlacePagina.href = "#";
+    
+    enlacePagina.textContent = numeroDePagina;
+
+    enlacePagina.addEventListener("click", ()=>{
+        buscarImagenesDelTerminoDeBusqueda(inputBusqueda.value, numeroDePagina).then(respuestaJSON => desplegarImagenes(respuestaJSON.hits));
+    })
+    enlacePagina.classList.add(...CLASES_TAILWIND_ENLACE_PAGINA);
+    
+    return enlacePagina;
 }
