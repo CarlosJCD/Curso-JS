@@ -1,3 +1,7 @@
+const ID_ALERTA_ERROR = "alertaError"
+const CLASE_CSS_ALERTA_ERROR = "error";
+
+
 const formCotizarCriptomoneda = document.getElementById("formulario");
 const selectMoneda = document.getElementById("moneda");
 const selectCriptoMoneda = document.getElementById("criptomonedas");
@@ -24,10 +28,46 @@ function construirOptionCriptomoneda(criptomoneda){
     return optionCriptomoneda;
 }
 
+/**
+ * 
+ * @param {string} mensajeAlertaError 
+ */
+function deplegarAlertaError(mensajeAlertaError) {
+    
+    if(!obtenerAlertaErrorExistente()){
+        const divAlertaError = construirDivAlertaError(mensajeAlertaError);
+
+        formCotizarCriptomoneda.appendChild(divAlertaError);
+
+        setTimeout(() => {
+            divAlertaError.remove();
+        }, 3000);
+    }
+}
+
+function obtenerAlertaErrorExistente() {
+    return document.getElementById(ID_ALERTA_ERROR);
+}
+
+/**
+ * 
+ * @param {string} mensajeAlertaError 
+ * @returns {HTMLDivElement}
+ */
+function construirDivAlertaError(mensajeAlertaError) {
+    const divAlertaError = document.createElement("div");
+    divAlertaError.id = ID_ALERTA_ERROR;
+    divAlertaError.classList.add(CLASE_CSS_ALERTA_ERROR);
+    divAlertaError.textContent = mensajeAlertaError
+
+    return divAlertaError;
+}
+
 
 export default {
     formCotizarCriptomoneda,
     selectMoneda,
     selectCriptoMoneda,
     deplegarOpcionesCriptomonedas,
+    deplegarAlertaError
 }
