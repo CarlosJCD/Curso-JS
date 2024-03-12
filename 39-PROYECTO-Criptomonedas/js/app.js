@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             return
         }
 
-        API.consultarCotizacion(camposFormularioCotización).then(cotizacion => console.log(cotizacion))
+        API.consultarCotizacion(camposFormularioCotización).then(cotizacion => vistaHTML.desplegarCotización(cotizacion))
         
     })
 })

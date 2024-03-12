@@ -16,7 +16,8 @@ function obtenerOpcionesCriptomonedas() {
  * @param {string} camposFormularioCotizacion.criptomoneda 
  */
 function consultarCotizacion(camposFormularioCotización) {
-    return fetchURL(obtenerUrlCotización(camposFormularioCotización)).then(respuesta => respuesta.DISPLAY);
+    const {moneda, criptomoneda} = camposFormularioCotización;
+    return fetchURL(obtenerUrlCotización(camposFormularioCotización)).then(respuesta => respuesta.DISPLAY[criptomoneda][moneda]);
 }
 
 /**
