@@ -94,6 +94,15 @@ function construirParrafoDeCotización(htmlInterno, claseCSS = "") {
     return parrafoCotización;
 }
 
+function desplegarSpinner() {
+    divResultado.innerHTML = `
+    <div class="spinner">
+    <div class="bounce1"></div>
+    <div class="bounce2"></div>
+    <div class="bounce3"></div>
+    </div>
+    `
+}
 
 export default {
     formCotizarCriptomoneda,
@@ -101,5 +110,6 @@ export default {
     selectCriptoMoneda,
     deplegarOpcionesCriptomonedas,
     deplegarAlertaError,
-    desplegarCotización
+    desplegarCotización,
+    desplegarSpinner
 }

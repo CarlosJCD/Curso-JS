@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             vistaHTML.deplegarAlertaError(respuestaValidacionFormularioCriptomoneda.mensaje);
             return
         }
-
+        vistaHTML.desplegarSpinner();
         API.consultarCotizacion(camposFormularioCotización).then(cotizacion => vistaHTML.desplegarCotización(cotizacion))
         
     })
