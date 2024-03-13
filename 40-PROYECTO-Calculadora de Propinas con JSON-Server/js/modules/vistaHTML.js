@@ -1,5 +1,6 @@
 import Platillo from "../types/Platillo.js";
 import categorias from "./categorias.js";
+import pedido from "./pedido.js";
 
 const CLASES_BOOTSTRAP_ALERTA_ERROR = ['invalid-feedback', 'd-block', 'text-center'];
 const CLASES_BOOTSTRAP_DIV_PLATILLO = ['row', 'border-top'];
@@ -72,14 +73,14 @@ function desplegarPlatillos(platillos) {
  * @param {Platillo} platillo 
  */
 function construirDivPlatillo(platillo) {
-    const {id, nombre, precio, categoria} = platillo
+    const {nombre, precio, categoria} = platillo
     const divPlatillo = document.createElement('DIV');
     divPlatillo.classList.add(...CLASES_BOOTSTRAP_DIV_PLATILLO);
     
     divPlatillo.appendChild(construirDivNombrePlatillo(nombre));
     divPlatillo.appendChild(construirDivPrecioPlatillo(precio));
     divPlatillo.appendChild(construirDivCategoriaPlatillo(categoria));
-    divPlatillo.appendChild(construirDivAgregarPlatillo(id));
+    divPlatillo.appendChild(construirDivAgregarPlatillo(platillo));
     
     return divPlatillo;
 }
@@ -134,15 +135,25 @@ function construirDivAgregarPlatillo(idPlatillo) {
 
 /**
  * 
- * @param {string} idPlatillo 
+ * @param {Platillo} platillo 
  */
-function construirInputCantidadPlatillo(idPlatillo) {
+function construirInputCantidadPlatillo(platillo) {
     const inputCantidadPlatillo = document.createElement('INPUT');
     inputCantidadPlatillo.type = 'number';
     inputCantidadPlatillo.min = 0;
     inputCantidadPlatillo.value = 0;
-    inputCantidadPlatillo.id = `producto-${idPlatillo}`;
+    inputCantidadPlatillo.id = `producto-${platillo.id}`;
     inputCantidadPlatillo.classList.add(CLASE_BOOTSTRAP_INPUT_CANTIDAD_PLATILLO);
+
+    inputCantidadPlatillo.addEventListener("change", ()=>{
+        const cantidad = parseInt(inputCantidadPlatillo.value);
+        
+       platillo.cantidad = cantidad;
+
+        pedido.actualizarPlatillosPedidos(platillo);
+
+        console.log(pedido.obtenerPedido().platillos);
+    })
 
     return inputCantidadPlatillo;
 }
