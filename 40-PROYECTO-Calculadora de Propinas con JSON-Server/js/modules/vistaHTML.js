@@ -172,9 +172,9 @@ function construirDivContenedorResumenPedido(pedido) {
     const divContenedorResumenPedido = document.createElement("div");
     divContenedorResumenPedido.classList.add(...constantes.CLASES_BOOTSTRAP_DIV_CONTENEDOR_RESUMEN_PEDIDO);
 
+    divContenedorResumenPedido.appendChild(construirH3EncabezadoResumenPedido("Platillos Pedidos"));
     divContenedorResumenPedido.appendChild(construirParrafoConSpanParaResumenPedido("Mesa: ", mesa))
     divContenedorResumenPedido.appendChild(construirParrafoConSpanParaResumenPedido("Hora: ", hora))
-    divContenedorResumenPedido.appendChild(construirH3EncabezadoPlatillosPedidos());
     divContenedorResumenPedido.appendChild(construirUlListaPlatillosPedidos(platillos));
 
 
@@ -188,17 +188,17 @@ function construirParrafoConSpanParaResumenPedido(contenidoParrafo, contenidoSpa
 
     const span = document.createElement("span");
     span.textContent = contenidoSpan;
-    span.classList.add(...constantes.CLASE_BOOTSTRAP_SPAN);
+    span.classList.add(...constantes.CLASE_BOOTSTRAP_SPAN_RESUMEN_PEDIDO);
 
     parrafo.appendChild(span);
 
     return parrafo;
 }
 
-function construirH3EncabezadoPlatillosPedidos() {
+function construirH3EncabezadoResumenPedido(textoEncabezado) {
     const h3EncabezadoPlatillosPedidos = document.createElement("h3");
-    h3EncabezadoPlatillosPedidos.textContent = "Platillos Pedidos";
-    h3EncabezadoPlatillosPedidos.classList.add(constantes.CLASE_BOOTSTRAP_H3_HEADING_PLATILLOS_PEDIDO);
+    h3EncabezadoPlatillosPedidos.textContent = textoEncabezado;
+    h3EncabezadoPlatillosPedidos.classList.add(...constantes.CLASES_BOOTSTRAP_H3_ENCABEZADO_RESUMEN_PEDIDO);
 
     return h3EncabezadoPlatillosPedidos;
 }
@@ -270,13 +270,125 @@ function reiniciarContadorDelPlatillo(idPlatillo) {
 }
 
 function construirDivFormularioPropinas() {
+
     const divFormularioPropinas = document.createElement("div");
+    divFormularioPropinas.classList.add(...constantes.CLASES_BOOTSTRAP_DIV_FORMULARIO_PROPINAS);
 
-    
-
+    divFormularioPropinas.appendChild(construirDivContenedorFormularioPropinas());
 
     return divFormularioPropinas;
 }
+
+function construirDivContenedorFormularioPropinas() {
+    const divContenedorFormularioPropinas = document.createElement("div");
+    divContenedorFormularioPropinas.id = constantes.ID_FORMULARIO_PROPINAS;
+    divContenedorFormularioPropinas.classList.add(...constantes.CLASES_BOOTSTRAP_DIV_CONTENEDOR_FORMULARIO_PROPINAS)
+    
+    divContenedorFormularioPropinas.appendChild(construirH3EncabezadoResumenPedido("Propina"));
+    divContenedorFormularioPropinas.appendChild(construirDivContenedorInputPorcentajePropina("10"))
+    divContenedorFormularioPropinas.appendChild(construirDivContenedorInputPorcentajePropina("25"))
+    divContenedorFormularioPropinas.appendChild(construirDivContenedorInputPorcentajePropina("50"))
+
+    return divContenedorFormularioPropinas;
+}
+
+/**
+ * 
+ * @param {string} porcentajePropina 
+ */
+function construirDivContenedorInputPorcentajePropina(porcentajePropina){
+    const divContenedorInputPorcentajePropina = document.createElement('div');
+    divContenedorInputPorcentajePropina.classList.add(constantes.CLASE_BOOTSTRAP_DIV_CONTENEDOR_INPUT_FORMULARIO_PROPINAS);
+    
+    divContenedorInputPorcentajePropina.appendChild(construirLabelPorcentajePropina(porcentajePropina))
+    divContenedorInputPorcentajePropina.appendChild(construirInputPorcentajePropina(porcentajePropina))
+
+    return divContenedorInputPorcentajePropina;
+}
+
+function construirLabelPorcentajePropina(porcentajePropina){
+    const labelPorcentajePropina = document.createElement('label');
+    labelPorcentajePropina.textContent = `${porcentajePropina}%`;
+    labelPorcentajePropina.classList.add(constantes.CLASE_BOOTSTRAP_LABEL_FORMULARIO_PROPINAS);
+
+    return labelPorcentajePropina;
+}
+
+function construirInputPorcentajePropina(porcentajePropina){
+    const inputPorcentajePropina = document.createElement('input');
+    inputPorcentajePropina.type = "radio";
+    inputPorcentajePropina.name = 'propina';
+    inputPorcentajePropina.value = porcentajePropina;
+    inputPorcentajePropina.classList.add(constantes.CLASE_BOOTSTRAP_INPUT_RADIO_FORMULARIO_PROPINAS);
+
+    inputPorcentajePropina.addEventListener("click", evento => {
+        const porcentajePropina = parseInt(evento.target.value);
+
+        const costoTotalDeLosPlatillos = pedido.calcularCostoTotalDelosPlatillosEnELPedido();
+
+        const totalPropina = costoTotalDeLosPlatillos * (porcentajePropina/100);
+
+        const costoTotalDelPedido = costoTotalDeLosPlatillos + totalPropina;
+
+        desplegarDesglosePedido(costoTotalDeLosPlatillos, totalPropina, costoTotalDelPedido);
+        
+    })
+
+    return inputPorcentajePropina
+}
+
+function desplegarDesglosePedido(costoTotalDeLosPlatillos, totalPropina, costoTotalDelPedido){
+    removerDesgloseAnterior();
+
+    const divContenedorDesglose = construirDivContenedorDesglose(costoTotalDeLosPlatillos, totalPropina, costoTotalDelPedido)
+
+    document.getElementById(constantes.ID_FORMULARIO_PROPINAS).appendChild(divContenedorDesglose);
+}
+
+function removerDesgloseAnterior() {
+    const desgloseDesplegado = document.getElementById(constantes.ID_CONTENEDOR_DESGLOSE)
+    if(desgloseDesplegado){
+        desgloseDesplegado.remove();
+    }
+}
+
+function construirDivContenedorDesglose(totalPlatillos, totalPropina, totalPedido) {
+    const divContenedorDesglose = document.createElement("div");
+    divContenedorDesglose.id = constantes.ID_CONTENEDOR_DESGLOSE
+
+    divContenedorDesglose.appendChild(construirParrafoTotalPlatillos(totalPlatillos));
+    divContenedorDesglose.appendChild(construirParrafoDesglose("Propina: ", totalPropina));
+    divContenedorDesglose.appendChild(construirParrafoDesglose("Total: ", totalPedido));
+
+    return divContenedorDesglose;
+}
+
+function construirParrafoTotalPlatillos(totalPlatillos) {
+    const parrafoTotalPlatillos = document.createElement('P');
+    parrafoTotalPlatillos.classList.add(...constantes.CLASES_BOOTSTRAP_PARRAFO_TOTAL_PLATILLOS_DESGLOSE);
+    parrafoTotalPlatillos.textContent = 'Total platillos: ';
+
+    const spanTotalPlatillos = document.createElement('SPAN');
+    spanTotalPlatillos.classList.add(constantes.CLASE_BOOTSTRAP_SPAN_RESUMEN_PEDIDO);
+    spanTotalPlatillos.textContent = `$${totalPlatillos}`;
+    parrafoTotalPlatillos.appendChild(spanTotalPlatillos);
+
+    return parrafoTotalPlatillos;
+}
+
+function construirParrafoDesglose(contenidoParrafo, contenidoSpan) {
+    const parrafoDesglose = document.createElement('P');
+    parrafoDesglose.classList.add(...constantes.CLASES_BOOTSTRAP_PARRAFO_TOTAL_DESGLOSE);
+    parrafoDesglose.textContent = contenidoParrafo;
+
+    const spanDesglose = document.createElement('SPAN');
+    spanDesglose.classList.add(constantes.CLASE_BOOTSTRAP_SPAN_RESUMEN_PEDIDO);
+    spanDesglose.textContent = `$${contenidoSpan}`;
+    parrafoDesglose.appendChild(spanDesglose);
+
+    return parrafoDesglose;
+}
+
 
 export default{
     buttonGuardarCliente,

@@ -101,6 +101,10 @@ function sinPlatillos() {
     return Pedido.platillos.length <= 0;
 }
 
+function calcularCostoTotalDelosPlatillosEnELPedido() {
+    return Pedido.platillos.reduce((total, platillo) =>  total += calcularSubtotalPlatillo(platillo.cantidad, platillo.precio),0)
+}
+
 export default {
     establecerMesa,
     establecerHora,
@@ -109,5 +113,6 @@ export default {
     calcularSubtotalPlatillo,
     eliminarPlatilloDelPedido,
     sinPlatillos,
+    calcularCostoTotalDelosPlatillosEnELPedido,
     Pedido
 }
