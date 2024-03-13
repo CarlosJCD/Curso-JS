@@ -1,5 +1,6 @@
 import vistaHTML from "./modules/vistaHTML.js";
 import validacion from "./modules/validacion.js";
+import api from "./modules/api.js";
 
 document.addEventListener("DOMContentLoaded", ()=>{
     
@@ -16,7 +17,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
             vistaHTML.desplegarAlertaError(respuestaValidaciónCliente.mensaje)
         } else {
             vistaHTML.cerrarModal();
-            vistaHTML.revelarSeccionesOcultas();
+            vistaHTML.mostrarSeccionesDeLaPagina();
+
+            api.obtenerPlatillos().then(platillos => vistaHTML.desplegarPlatillos(platillos));
         }
 
     });

@@ -1,6 +1,15 @@
-const CLASES_BOOTSTRAP_ALERTA_ERROR = ['invalid-feedback', 'd-block', 'text-center'];
+import Platillo from "../types/Platillo.js";
+import categorias from "./categorias.js";
 
-const CLASE_BOOTSTRAP_DISPLAY_NONE = "d-none"
+const CLASES_BOOTSTRAP_ALERTA_ERROR = ['invalid-feedback', 'd-block', 'text-center'];
+const CLASES_BOOTSTRAP_DIV_PLATILLO = ['row', 'border-top'];
+const CLASES_BOOTSTRAP_DIV_NOMBRE_PLATILLO = ['col-md-4', 'py-3'];
+const CLASES_BOOTSTRAP_DIV_PRECIO_PLATILLO = ['col-md-3', 'py-3', 'fw-bold'];
+const CLASES_BOOTSTRAP_DIV_CATEGORIA_PLATILLO = ['col-md-3', 'py-3'];
+const CLASES_BOOTSTRAP_DIV_AGREGAR_PLATILLO = ['col-md-2', 'py-3'];
+
+const CLASE_BOOTSTRAP_DISPLAY_NONE = "d-none";
+const CLASE_BOOTSTRAP_INPUT_CANTIDAD_PLATILLO = "form-control";
 
 const ID_ALERTA_ERROR = "alertaError";
 
@@ -9,6 +18,7 @@ const formModal = document.getElementById("formModal");
 const inputMesa = document.getElementById("mesa");
 const inputHora = document.getElementById("hora");
 const buttonGuardarCliente = document.getElementById("guardar-cliente");
+const contenedorPlatillos = document.getElementById("contenedorPlatillos");
 
 function desplegarAlertaError(mensajeAlertaError) {
     if(! alertaErrorExistente()){
@@ -42,10 +52,101 @@ function cerrarModal() {
     modalBootstrap.hide();
 }
 
-function revelarSeccionesOcultas() {
+function mostrarSeccionesDeLaPagina() {
     const seccionesOcultas = document.getElementsByClassName(CLASE_BOOTSTRAP_DISPLAY_NONE);
     Array.from(seccionesOcultas).forEach(seccionOculta => seccionOculta.classList.remove(CLASE_BOOTSTRAP_DISPLAY_NONE));
 }
+
+/**
+ * 
+ * @param {Platillo[]} platillos 
+ */
+function desplegarPlatillos(platillos) {
+    const divsPlatillos = platillos.map(platillo => construirDivPlatillo(platillo));
+
+    contenedorPlatillos.replaceChildren(...divsPlatillos);
+}
+
+/**
+ * 
+ * @param {Platillo} platillo 
+ */
+function construirDivPlatillo(platillo) {
+    const {id, nombre, precio, categoria} = platillo
+    const divPlatillo = document.createElement('DIV');
+    divPlatillo.classList.add(...CLASES_BOOTSTRAP_DIV_PLATILLO);
+    
+    divPlatillo.appendChild(construirDivNombrePlatillo(nombre));
+    divPlatillo.appendChild(construirDivPrecioPlatillo(precio));
+    divPlatillo.appendChild(construirDivCategoriaPlatillo(categoria));
+    divPlatillo.appendChild(construirDivAgregarPlatillo(id));
+    
+    return divPlatillo;
+}
+
+/**
+ * 
+ * @param {string} nombre 
+ */
+function construirDivNombrePlatillo(nombre) {
+    const divNombre = document.createElement('DIV');
+    divNombre.classList.add(...CLASES_BOOTSTRAP_DIV_NOMBRE_PLATILLO);
+    divNombre.textContent = nombre;
+
+    return divNombre;
+}
+
+/**
+ * 
+ * @param {string} precio 
+ */
+function construirDivPrecioPlatillo(precio) {
+    const divPrecioPlatillo = document.createElement('DIV');
+    divPrecioPlatillo.classList.add(...CLASES_BOOTSTRAP_DIV_PRECIO_PLATILLO);
+    divPrecioPlatillo.textContent = `$${precio}`;
+
+    return divPrecioPlatillo;
+}
+
+/**
+ * 
+ * @param {int} numCategoria 
+ */
+function construirDivCategoriaPlatillo(numCategoria) {
+    const divCategoriaPlatillo = document.createElement('DIV');
+    divCategoriaPlatillo.classList.add(...CLASES_BOOTSTRAP_DIV_CATEGORIA_PLATILLO);
+    divCategoriaPlatillo.textContent = categorias.obtenerCategoria(numCategoria);
+
+    return divCategoriaPlatillo;
+}
+
+/**
+ * 
+ * @param {string} idPlatillo 
+ */
+function construirDivAgregarPlatillo(idPlatillo) {
+    const divAgregarPlatillo = document.createElement('DIV');
+    divAgregarPlatillo.classList.add(...CLASES_BOOTSTRAP_DIV_AGREGAR_PLATILLO);
+    divAgregarPlatillo.appendChild(construirInputCantidadPlatillo(idPlatillo));
+
+    return divAgregarPlatillo;
+}
+
+/**
+ * 
+ * @param {string} idPlatillo 
+ */
+function construirInputCantidadPlatillo(idPlatillo) {
+    const inputCantidadPlatillo = document.createElement('INPUT');
+    inputCantidadPlatillo.type = 'number';
+    inputCantidadPlatillo.min = 0;
+    inputCantidadPlatillo.value = 0;
+    inputCantidadPlatillo.id = `producto-${idPlatillo}`;
+    inputCantidadPlatillo.classList.add(CLASE_BOOTSTRAP_INPUT_CANTIDAD_PLATILLO);
+
+    return inputCantidadPlatillo;
+}
+
 
 export default{
     buttonGuardarCliente,
@@ -53,5 +154,6 @@ export default{
     inputHora,
     desplegarAlertaError,
     cerrarModal,
-    revelarSeccionesOcultas
+    mostrarSeccionesDeLaPagina,
+    desplegarPlatillos
 }
