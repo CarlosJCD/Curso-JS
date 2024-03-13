@@ -2,16 +2,16 @@ import Platillo from "../types/Platillo.js"
 
 /**
  * 
- * @param {Object} cliente 
- * @param {string} cliente.mesa 
- * @param {string} cliente.hora
- * @param {Platillo[]} cliente.pedidos
+ * @param {Object} pedido 
+ * @param {string} pedido.mesa 
+ * @param {string} pedido.hora
+ * @param {Platillo[]} pedido.platillos
 */
-function validarCliente(cliente) {
-    if(cliente.mesa === ""){
+function validarPedido(pedido) {
+    if(pedido.mesa === ""){
         return {Ok: false, mensaje: "Por favor ingrese el numero de mesa"}
     }
-    if(cliente.hora === ""){
+    if(pedido.hora === ""){
         return {Ok: false, mensaje: "Por favor ingrese la hora"}
     }
 
@@ -20,5 +20,5 @@ function validarCliente(cliente) {
 
 
 export default{
-    validarCliente
+    validarPedido
 }

@@ -13,11 +13,11 @@ const Pedido = {
 }
 
 function establecerMesa(mesa) {
-    pedido.mesa = mesa;
+    Pedido.mesa = mesa;
     
 }
 function establecerHora(hora){
-    pedido.hora = hora;
+    Pedido.hora = hora;
 }
 
 /**
@@ -26,7 +26,7 @@ function establecerHora(hora){
  */
 function actualizarPlatillosPedidos(platillo) {
     if(cantidadPlatilloEn0(platillo.cantidad)){
-        if(platilloEnPedido(platillo.id)) eliminarPlatillo(platillo)
+        if(platilloEnPedido(platillo.id)) eliminarPlatilloDelPedido(platillo.id)
         return;
     } 
     
@@ -44,7 +44,7 @@ function cantidadPlatilloEn0(cantidadPlatillo) {
 
 /**
  *  
- * @param {string} idPlatillo 
+ * @param {number} idPlatillo 
  */
 function platilloEnPedido(idPlatillo) {
     return Pedido.platillos.some(platillo => platillo.id === idPlatillo);
@@ -52,10 +52,10 @@ function platilloEnPedido(idPlatillo) {
 
 /**
  * 
- * @param {Platillo} platilloAEliminar 
+ * @param {number} idPlatilloAEliminar 
  */
-function eliminarPlatillo(platilloAEliminar) {
-    Pedido.platillos = Pedido.platillos.filter(platilloEnPedido => platilloEnPedido.id !== platilloAEliminar.id)
+function eliminarPlatilloDelPedido(idPlatilloAEliminar) {
+    Pedido.platillos = Pedido.platillos.filter(platilloEnPedido => platilloEnPedido.id !== idPlatilloAEliminar)
 }
 
 /**
@@ -87,9 +87,27 @@ function obtenerPedido() {
     return {...Pedido};
 }
 
+/**
+ * 
+ * @param {number} cantidad 
+ * @param {number} precio 
+ * @returns 
+ */
+function calcularSubtotalPlatillo(cantidad, precio) {
+    return cantidad * precio;
+}
+
+function sinPlatillos() {
+    return Pedido.platillos.length <= 0;
+}
+
 export default {
     establecerMesa,
     establecerHora,
     actualizarPlatillosPedidos,
-    obtenerPedido
+    obtenerPedido,
+    calcularSubtotalPlatillo,
+    eliminarPlatilloDelPedido,
+    sinPlatillos,
+    Pedido
 }

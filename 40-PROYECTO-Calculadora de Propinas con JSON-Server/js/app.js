@@ -6,15 +6,15 @@ import pedido from "./modules/pedido.js";
 document.addEventListener("DOMContentLoaded", ()=>{
     
     vistaHTML.buttonGuardarCliente.addEventListener("click", evento => {
+        pedido.establecerMesa(vistaHTML.inputMesa.value);
+        pedido.establecerHora(vistaHTML.inputHora.value);
 
-        const respuestaValidaciónCliente = validacion.validarCliente(cliente);
+        const respuestaValidaciónCliente = validacion.validarPedido(pedido.obtenerPedido());
         
         if(! respuestaValidaciónCliente.Ok){
             vistaHTML.desplegarAlertaError(respuestaValidaciónCliente.mensaje)
         } else {
-            pedido.establecerMesa(vistaHTML.inputMesa.value);
-            pedido.establecerHora(vistaHTML.inputHora.value);
-            
+
             vistaHTML.cerrarModal();
             vistaHTML.mostrarSeccionesDeLaPagina();
 
