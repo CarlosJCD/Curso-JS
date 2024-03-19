@@ -1,17 +1,20 @@
+import API from "./modules/API.js";
 import VistaHTMLFormularioCliente from "./modules/VistaHTMLFormularioCliente.js";
-import { actualizarRegistroCliente, obtenerClientePorId } from "./modules/database.js";
 import { validarCliente } from "./modules/validaciones.js";
+
 
 let idCliente;
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded", ()=>{
     const urlSearchParams = new URLSearchParams(window.location.search);
 
     idCliente = parseInt(urlSearchParams.get("id"))
     if(idCliente){
-        obtenerClientePorId(idCliente).then(cliente=>{
-            VistaHTMLFormularioCliente.desplegarClienteEnELFormulario(cliente);
-        }).catch(() => {window.location.href = "index.html"})
+        try{
+            cargarInfoCliente(idCliente);
+        } catch(error) {
+            window.location.href = "index.html"
+        }
     } else{
         window.location.href = "index.html"
     }
@@ -35,10 +38,25 @@ VistaHTMLFormularioCliente.formCliente.addEventListener("submit",evento => {
         return;
     } 
 
-    actualizarRegistroCliente(clienteEditado).then(() =>{
-        VistaHTMLFormularioCliente.desplegarAlertaExito("Cliente actualizado exitosamente")
-        setTimeout(() => {
-            window.location.href = "index.html"
-        }, 2000);
-    }).catch(()=>VistaHTMLFormularioCliente.desplegarAlertaError("Ha ocurrido un error al actualizar el cliente, por favor inténtelo mas tarde."));;
+    actualizarDatosCliente(clienteEditado);
 })
+
+
+async function cargarInfoCliente(idCliente){
+    const cliente = await API.obtenerCliente(idCliente);
+    VistaHTMLFormularioCliente.desplegarClienteEnELFormulario(cliente);
+}
+
+async function actualizarDatosCliente(cliente) {
+    const respuestaActualizaciónCliente = await API.actualizarCliente(cliente);
+    
+    if (respuestaActualizaciónCliente.ok) {
+        VistaHTMLFormularioCliente.desplegarAlertaExito("Cliente actualizado exitosamente");
+
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 3000);
+    } else {
+        VistaHTMLFormularioCliente.desplegarAlertaError(respuestaActualizaciónCliente.mensaje);
+    }
+}

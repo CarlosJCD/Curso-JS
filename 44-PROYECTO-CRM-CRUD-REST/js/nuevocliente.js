@@ -31,7 +31,7 @@ VistaHTMLFormularioCliente.formCliente.addEventListener("submit", evento => {
  * @param {string} datosClienteNuevo.empresa
  */
 async function registrarCliente(datosClienteNuevo) {
-    datosClienteNuevo.id = Date.now();
+    datosClienteNuevo.id = `${Date.now()}`;
 
     const respuestaRegistrarCliente = await API.registrarClienteNuevo(datosClienteNuevo);
     
